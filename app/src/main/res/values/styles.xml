@@ -1,0 +1,136 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--Appbar背景色-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!--状态栏颜色-->
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!--控制各个控件被选中时的颜色-->
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--各个控制控件的默认颜色-->
+        <item name="android:colorControlNormal" tools:ignore="NewApi">@color/colorPrimary</item>
+        <!--在无需多点触控的页面上，建议关闭多点触控-->
+        <item name="android:splitMotionEvents">false</item>
+        <!-- 禁止多点触控 -->
+        <item name="android:windowEnableSplitTouch">false</item>
+
+    </style>
+    <style name="StartAppTheme" parent="AppBaseTheme">
+        <item name="android:windowNoTitle">true</item>
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    <!-- Base application theme. -->
+    <style name="BaseAppTheme" parent="AppBaseTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:textAllCaps">false</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowAnimationStyle">@style/AnimationActivity</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppWhiteTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/gray</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <!--在无需多点触控的页面上，建议关闭多点触控-->
+        <item name="android:splitMotionEvents">false</item>
+        <!-- 禁止多点触控 -->
+        <item name="android:windowEnableSplitTouch">false</item>
+    </style>
+
+    <style name="DialogAppTheme" parent="AppBaseTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:textAllCaps">false</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:theme">@style/Animation.AppCompat.Dialog</item>
+        <item name="android:windowAnimationStyle">@style/AnimationActivity</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AnimationActivity" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_left</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="toolbar_theme" parent="@style/ThemeOverlay.AppCompat.Light">
+        <!--menu字体大小-->
+        <item name="android:textSize">@dimen/sp_12</item>
+        <!--修改toolbar的Title(大标题)颜色-->
+        <item name="android:textColorPrimary">@color/white</item>
+        <!--修改toolbar的subtitle(小标题)颜色-->
+        <item name="subtitleTextColor">@color/white</item>
+        <!--menu字体颜色,我这定义name时加上了android:，结果不管用-->
+        <!--<item name="actionMenuTextAppearance">@style/MenuTextStyle</item>-->
+        <!--修改toolbar的图标颜色 三个点 ...-->
+        <item name="colorControlNormal">@color/white</item>
+    </style>
+
+    <!-- 设置Toolbar 子标题subtitle标题字体的大小 -->
+    <style name="Toolbar.SubTitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">15sp</item><!--子标题字体大小-->
+        <item name="android:textColor">#ffffff</item><!--子标题字体颜色-->
+    </style>
+    <!--toolbar popup_theme的样式-->
+    <style name="popup_theme" parent="@style/ThemeOverlay.AppCompat.Light">
+        <!--设置背景-->
+        <item name="android:background">@color/transparent</item>
+        <!--设置字体颜色-->
+        <item name="android:textColor">@color/black</item>
+        <!--设置不覆盖锚点-->
+        <item name="overlapAnchor">false</item>
+    </style>
+
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <!--Toolbar 主标题大小-->
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <!--Toobar 菜单字体设置-->
+    <style name="MenuTextStyle">
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="android:textSize">@dimen/sp_12</item>
+    </style>
+
+    <style name="Toolbar_TextAppearance_White">
+        <item name="android:textSize">@dimen/sp_20</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+
+
+
+
+    <style name="FragmentDialogStyle">
+        <item name="android:windowFrame">@null</item>
+        <!-- 边框 -->
+        <!--   <item name="android:windowIsFloating">true</item> -->
+        <!-- 是否浮现在activity之上 -->
+        <!-- 半透明 -->
+        <item name="android:windowIsTranslucent">false</item>
+        <!-- 无标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 背景透明 -->
+        <item name="android:windowBackground">@color/white</item>
+        <!-- 是否允许对话框的背景变暗 -->
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TabLayoutTextStyle12">
+        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+
+</resources>
