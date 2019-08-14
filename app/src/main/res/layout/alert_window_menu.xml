@@ -2,34 +2,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_alpha_black"
     android:maxWidth="@dimen/dp_300"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="@dimen/dp_5">
 
-    <com.tao.xiaoyuanyuan.view.MarqueeTextView
-        android:layout_weight="1"
-        android:id="@+id/suspensionText_show"
-        android:layout_width="0dp"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_alpha_black"
+        android:padding="@dimen/dp_5"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="marquee"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="start"
-        android:maxWidth="@dimen/dp_350"
-        android:singleLine="true"
-        android:src="@mipmap/ic_launcher_round"
-        android:text="开始"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sp_16" />
+        android:layout_marginTop="@dimen/dp_0_5"
+        android:background="@drawable/bg_alpha_black"
+        android:padding="@dimen/dp_5">
 
-    <ImageView
+        <com.tao.xiaoyuanyuan.view.MarqueeTextView
+            android:id="@+id/suspensionText_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="start"
+            android:maxWidth="@dimen/dp_350"
+            android:singleLine="true"
+            android:src="@mipmap/ic_launcher_round"
+            android:text="开始"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16" />
 
-        android:id="@+id/suo_iv"
-        android:layout_width="@dimen/dp_20"
-        android:layout_height="@dimen/dp_20"
-        android:layout_gravity="center|end"
-        android:layout_marginStart="@dimen/dp_10"
-        android:src="@mipmap/user_suo"
-        android:visibility="visible" />
+        <ImageView
+            android:id="@+id/suo_iv"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:layout_gravity="center|end"
+            android:layout_marginStart="@dimen/dp_10"
+            android:src="@mipmap/user_suo"
+            android:visibility="visible" />
+    </LinearLayout>
+
 </LinearLayout>

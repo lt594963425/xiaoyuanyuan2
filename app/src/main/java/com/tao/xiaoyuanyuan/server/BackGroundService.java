@@ -41,6 +41,7 @@ public class BackGroundService extends Service {
     //字体大小
     private int mTextSize = 15;
     private boolean isSuo = false;
+    public View mView;
 
     //创建服务时调用
     @Override
@@ -84,7 +85,8 @@ public class BackGroundService extends Service {
         }
         layoutParams.format = PixelFormat.RGBA_8888;
         layoutParams.gravity = Gravity.LEFT | Gravity.TOP;
-        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        // 可在全屏幕布局, 不受状态栏影响 // 最初不可获取焦点, 这样不影响底层应用接收触摸事件
+        layoutParams.flags =WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN| WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.width = UIUtils.dip2Px(385);
         layoutParams.x = 300;
@@ -95,26 +97,24 @@ public class BackGroundService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void showFloatingWindow() {
         if (Settings.canDrawOverlays(this)) {
-            View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_window_menu, null);
-            mSuspensionTextShow = view.findViewById(R.id.suspensionText_show);
-            ImageView suoIv = view.findViewById(R.id.suo_iv);
+            mView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_window_menu, null);
+            mSuspensionTextShow = mView.findViewById(R.id.suspensionText_show);
+            ImageView suoIv = mView.findViewById(R.id.suo_iv);
             mSuspensionTextShow.setText(mTextString);
             mSuspensionTextShow.setTypeface(Typeface.DEFAULT, mTextType);
             mSuspensionTextShow.setTextColor(mTextColor);
             mSuspensionTextShow.setTextSize(mTextSize);
-            windowManager.addView(view, layoutParams);
+            windowManager.addView(mView, layoutParams);
             suoIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     isSuo = !isSuo;
-                    if (isSuo){
-
-                    }else {
+                    if (isSuo) {
                         ToastUtils.showToast("已锁定！");
                     }
                 }
             });
-            view.setOnTouchListener(new FloatingOnTouchListener());
+            mView.setOnTouchListener(new FloatingOnTouchListener());
         }
     }
 
@@ -131,11 +131,13 @@ public class BackGroundService extends Service {
             mSuspensionTextShow.setTextSize(mTextSize);
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(SuoServerEvent suoServerEvent) {
         isSuo = suoServerEvent.isIssuo();
 
     }
+
     //销毁服务时调用
     @Override
     public void onDestroy() {
@@ -191,5 +193,24 @@ public class BackGroundService extends Service {
 
     public void setSuo(boolean suo) {
         isSuo = suo;
+    }
+
+
+    /**
+     * 隐藏悬浮View
+     */
+    public void hideFloatView() {
+        if (windowManager != null && mView != null && mView.isShown()) {
+            mView.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 显示悬浮View
+     */
+    public void showFloatView() {
+        if (windowManager != null && mView != null && !mView.isShown()) {
+            mView.setVisibility(View.VISIBLE);
+        }
     }
 }

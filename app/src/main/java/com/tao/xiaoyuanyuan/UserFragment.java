@@ -1,5 +1,6 @@
 package com.tao.xiaoyuanyuan;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -22,7 +23,11 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.hanks.htextview.base.AnimationListener;
+import com.hanks.htextview.base.HTextView;
+import com.hanks.htextview.evaporate.EvaporateTextView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.tao.xiaoyuanyuan.event.BackGroundServiceEvent;
 import com.tao.xiaoyuanyuan.event.SuoEvent;
@@ -40,6 +45,7 @@ import com.tao.xiaoyuanyuan.view.colorpicker.OnColorChangedListener;
 import com.tao.xiaoyuanyuan.view.colorpicker.OnColorSelectedListener;
 import com.tao.xiaoyuanyuan.view.colorpicker.slider.AlphaSlider;
 import com.tao.xiaoyuanyuan.view.colorpicker.slider.LightnessSlider;
+
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -76,7 +82,18 @@ public class UserFragment extends Fragment {
     public RadioButton mFontType3;
     public RadioButton mFontType4;
     public ImageView mClearText;
+    class SimpleAnimationListener implements AnimationListener {
 
+        private Context context;
+
+        public SimpleAnimationListener(Context context) {
+            this.context = context;
+        }
+        @Override
+        public void onAnimationEnd(HTextView hTextView) {
+            Toast.makeText(context, "Animation finished", Toast.LENGTH_SHORT).show();
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, null);

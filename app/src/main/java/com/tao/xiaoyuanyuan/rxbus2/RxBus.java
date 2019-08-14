@@ -20,7 +20,6 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
-
 /**
  * RxBus
  * Created by gorden on 2016/5/12.

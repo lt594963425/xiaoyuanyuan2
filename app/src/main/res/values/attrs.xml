@@ -23,4 +23,7 @@
         <attr name="pickerButtonOk" format="reference|string"/>
         <attr name="pickerButtonCancel" format="reference|string"/>
     </declare-styleable>
+
+
+
 </resources>
