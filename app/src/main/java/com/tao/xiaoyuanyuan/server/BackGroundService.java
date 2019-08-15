@@ -16,10 +16,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tao.xiaoyuanyuan.R;
 import com.tao.xiaoyuanyuan.event.BackGroundServiceEvent;
+import com.tao.xiaoyuanyuan.event.ShowEvent;
+import com.tao.xiaoyuanyuan.event.ShowWidthEvent;
 import com.tao.xiaoyuanyuan.event.SuoServerEvent;
 import com.tao.xiaoyuanyuan.rxbus2.RxBus;
 import com.tao.xiaoyuanyuan.rxbus2.Subscribe;
@@ -40,8 +43,10 @@ public class BackGroundService extends Service {
     public int mTextColor = Color.BLACK;
     //字体大小
     private int mTextSize = 15;
+    private int width = 385;
     private boolean isSuo = false;
     public View mView;
+    public LinearLayout mContentTextLly;
 
     //创建服务时调用
     @Override
@@ -50,11 +55,9 @@ public class BackGroundService extends Service {
         if (!RxBus.getDefault().isRegistered(this)) {
             RxBus.getDefault().register(this);
         }
-
         isStarted = true;
         Log.d(TAG, "onCreate");
         isRun = false;
-
         setWindowView();
     }
 
@@ -67,7 +70,7 @@ public class BackGroundService extends Service {
         mTextType = intent.getIntExtra("mTextString", Typeface.NORMAL);
         mTextColor = intent.getIntExtra("mTextColor", Color.BLACK);
         mTextSize = intent.getIntExtra("mTextSize", 15);
-
+        width = intent.getIntExtra("mWidth", width);
         showFloatingWindow();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -84,11 +87,14 @@ public class BackGroundService extends Service {
             layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
         }
         layoutParams.format = PixelFormat.RGBA_8888;
-        layoutParams.gravity = Gravity.LEFT | Gravity.TOP;
+        layoutParams.gravity = Gravity.CENTER | Gravity.TOP;
         // 可在全屏幕布局, 不受状态栏影响 // 最初不可获取焦点, 这样不影响底层应用接收触摸事件
-        layoutParams.flags =WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN| WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        layoutParams.width = UIUtils.dip2Px(385);
+        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.x = 300;
         layoutParams.y = 300;
     }
@@ -99,18 +105,23 @@ public class BackGroundService extends Service {
         if (Settings.canDrawOverlays(this)) {
             mView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_window_menu, null);
             mSuspensionTextShow = mView.findViewById(R.id.suspensionText_show);
+            mContentTextLly = mView.findViewById(R.id.content_text_lly);
             ImageView suoIv = mView.findViewById(R.id.suo_iv);
             mSuspensionTextShow.setText(mTextString);
             mSuspensionTextShow.setTypeface(Typeface.DEFAULT, mTextType);
             mSuspensionTextShow.setTextColor(mTextColor);
             mSuspensionTextShow.setTextSize(mTextSize);
+            mContentTextLly.getLayoutParams().width = UIUtils.dip2Px(width);
+            mContentTextLly.requestLayout();
             windowManager.addView(mView, layoutParams);
             suoIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     isSuo = !isSuo;
                     if (isSuo) {
-                        ToastUtils.showToast("已锁定！");
+                        ToastUtils.showToast("已锁定🔒！");
+                    } else {
+                        ToastUtils.showToast("已解锁🔚！");
                     }
                 }
             });
@@ -135,7 +146,24 @@ public class BackGroundService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(SuoServerEvent suoServerEvent) {
         isSuo = suoServerEvent.isIssuo();
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(ShowWidthEvent showWidthEvent) {
+        width = showWidthEvent.getWidth();
+        if (mContentTextLly != null) {
+            mContentTextLly.getLayoutParams().width = UIUtils.dip2Px(width);
+            mContentTextLly.requestLayout();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(ShowEvent showEvent) {
+        if (showEvent.isShow()) {
+            showFloatView();
+        } else {
+            hideFloatView();
+        }
     }
 
     //销毁服务时调用

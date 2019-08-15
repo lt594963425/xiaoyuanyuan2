@@ -2,36 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:maxWidth="@dimen/dp_300"
     android:orientation="vertical"
     android:padding="@dimen/dp_5">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_alpha_black"
-        android:padding="@dimen/dp_5"
-        android:text="@string/app_name"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp_12"
-        android:textStyle="bold" />
-
     <LinearLayout
+        android:id="@+id/content_text_lly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_0_5"
         android:background="@drawable/bg_alpha_black"
         android:padding="@dimen/dp_5">
 
         <com.tao.xiaoyuanyuan.view.MarqueeTextView
             android:id="@+id/suspensionText_show"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="marquee"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:gravity="start"
+            android:marqueeRepeatLimit="marquee_forever"
             android:maxWidth="@dimen/dp_350"
             android:singleLine="true"
             android:src="@mipmap/ic_launcher_round"
@@ -49,4 +39,14 @@
             android:visibility="visible" />
     </LinearLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_0_5"
+        android:background="@drawable/bg_alpha_black"
+        android:padding="@dimen/dp_5"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold" />
 </LinearLayout>

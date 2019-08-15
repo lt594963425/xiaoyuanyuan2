@@ -21,15 +21,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hanks.htextview.base.AnimationListener;
-import com.hanks.htextview.base.HTextView;
-import com.hanks.htextview.evaporate.EvaporateTextView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.tao.xiaoyuanyuan.event.BackGroundServiceEvent;
+import com.tao.xiaoyuanyuan.event.ShowEvent;
+import com.tao.xiaoyuanyuan.event.ShowWidthEvent;
 import com.tao.xiaoyuanyuan.event.SuoEvent;
 import com.tao.xiaoyuanyuan.event.SuoServerEvent;
 import com.tao.xiaoyuanyuan.rxbus2.RxBus;
@@ -37,6 +37,7 @@ import com.tao.xiaoyuanyuan.rxbus2.Subscribe;
 import com.tao.xiaoyuanyuan.rxbus2.ThreadMode;
 import com.tao.xiaoyuanyuan.server.BackGroundService;
 import com.tao.xiaoyuanyuan.utils.AnimalUtil;
+import com.tao.xiaoyuanyuan.utils.LogUtils;
 import com.tao.xiaoyuanyuan.utils.SPManager;
 import com.tao.xiaoyuanyuan.utils.ToastUtils;
 import com.tao.xiaoyuanyuan.utils.UIUtils;
@@ -65,6 +66,7 @@ public class UserFragment extends Fragment {
     LightnessSlider vLightnessSlider;
     AlphaSlider vAlphaSlider;
     Button openSuspension;
+    Button closeSuspension;
 
     private boolean expandView = false;
     public LinearLayout mColorPickViewLly;
@@ -77,23 +79,15 @@ public class UserFragment extends Fragment {
     public int mTextColor = Color.BLACK;
     //字体大小
     private int mTextSize = 15;
+    private int mWidth = 385;
     public RadioButton mFontType1;
     public RadioButton mFontType2;
     public RadioButton mFontType3;
     public RadioButton mFontType4;
     public ImageView mClearText;
-    class SimpleAnimationListener implements AnimationListener {
+    public RadioGroup mRgOrientation;
+    public SeekBar mSeekbarWidth;
 
-        private Context context;
-
-        public SimpleAnimationListener(Context context) {
-            this.context = context;
-        }
-        @Override
-        public void onAnimationEnd(HTextView hTextView) {
-            Toast.makeText(context, "Animation finished", Toast.LENGTH_SHORT).show();
-        }
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, null);
@@ -112,14 +106,19 @@ public class UserFragment extends Fragment {
         vLightnessSlider = view.findViewById(R.id.v_lightness_slider);
         vAlphaSlider = view.findViewById(R.id.v_alpha_slider);
         openSuspension = view.findViewById(R.id.open_suspension);
+        closeSuspension = view.findViewById(R.id.close_suspension);
         mSwitchCompat = view.findViewById(R.id.switch_compat);
         mClearText = view.findViewById(R.id.clear_text);
+        mRgOrientation = view.findViewById(R.id.rg_Orientation);
+        //宽度
+        mSeekbarWidth = view.findViewById(R.id.seekbar_width);
+
         //字体类型
         mFontType1 = view.findViewById(R.id.text_type_1);
         mFontType2 = view.findViewById(R.id.text_type_2);
         mFontType3 = view.findViewById(R.id.text_type_3);
         mFontType4 = view.findViewById(R.id.text_type_4);
-
+        mWidth = SPManager.getInt(SPManager.SP_MAIN_FLAG, "mWidth", mWidth);
         mTextString = SPManager.getString(SPManager.SP_MAIN_FLAG, "mTextString", mTextString);
         mTextType = SPManager.getInt(SPManager.SP_MAIN_FLAG, "mTextType", mTextType);
         mTextColor = SPManager.getInt(SPManager.SP_MAIN_FLAG, "mTextColor", mTextColor);
@@ -128,8 +127,18 @@ public class UserFragment extends Fragment {
         suspensionTextEt.setTypeface(Typeface.DEFAULT, mTextType);
         suspensionTextEt.setTextColor(mTextColor);
         suspensionTextEt.setTextSize(mTextSize);
+        suspensionColorTv.setBackgroundColor(mTextColor);
         seekbarLevel.setProgress(mTextSize - 1);
-
+        mSeekbarWidth.setProgress(mWidth - 50);
+        if (Typeface.NORMAL == mTextType) {
+            mRgOrientation.check(R.id.text_type_1);
+        } else if (mTextType == Typeface.ITALIC) {
+            mRgOrientation.check(R.id.text_type_2);
+        } else if (mTextType == Typeface.BOLD) {
+            mRgOrientation.check(R.id.text_type_3);
+        } else if (mTextType == Typeface.BOLD_ITALIC) {
+            mRgOrientation.check(R.id.text_type_4);
+        }
         initView();
 
         return view;
@@ -141,6 +150,13 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startFloatingButtonService();
+            }
+        });
+        closeSuspension.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View v) {
+                RxBus.getDefault().post(new ShowEvent(false));
             }
         });
         addDisposable(RxTextView.textChanges(suspensionTextEt)
@@ -240,6 +256,28 @@ public class UserFragment extends Fragment {
 
             }
         });
+
+        mSeekbarWidth.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    mWidth = progress + 50;
+                    LogUtils.e("progress", "progress:" + progress);
+                    SPManager.saveInt(SPManager.SP_MAIN_FLAG, "mWidth", mWidth);
+                    postChangeTextWith(new ShowWidthEvent(mWidth));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         mFontType1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -279,6 +317,9 @@ public class UserFragment extends Fragment {
         });
     }
 
+    /**
+     * 调节文字内容
+     */
     public void postChangeText() {
         BackGroundServiceEvent backGroundService = new BackGroundServiceEvent();
         backGroundService.setString(mTextString);
@@ -286,6 +327,13 @@ public class UserFragment extends Fragment {
         backGroundService.setTextType(mTextType);
         backGroundService.setTextColor(mTextColor);
         RxBus.getDefault().post(backGroundService);
+    }
+
+    /**
+     * 调节悬浮宽度
+     */
+    public void postChangeTextWith(ShowWidthEvent showWidthEvent) {
+        RxBus.getDefault().post(showWidthEvent);
     }
 
     @Override
@@ -303,12 +351,10 @@ public class UserFragment extends Fragment {
 
     }
 
-    private int x = 221;
-    private int y = 1857;
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void startFloatingButtonService() {
         if (BackGroundService.isStarted) {
+            RxBus.getDefault().post(new ShowEvent(true));
             return;
         }
         if (!Settings.canDrawOverlays(getActivity())) {
@@ -320,6 +366,7 @@ public class UserFragment extends Fragment {
             startIntent.putExtra("mTextType", mTextType);
             startIntent.putExtra("mTextColor", mTextColor);
             startIntent.putExtra("mTextSize", mTextSize);
+            startIntent.putExtra("mWidth", mWidth);
             if (getActivity() != null) {
                 getActivity().startService(startIntent);
             }
@@ -329,7 +376,7 @@ public class UserFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(SuoEvent suoEvent) {
-        if (mSwitchCompat!=null){
+        if (mSwitchCompat != null) {
             mSwitchCompat.setChecked(suoEvent.isIssuo());
         }
 
