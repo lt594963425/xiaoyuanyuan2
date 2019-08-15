@@ -1,5 +1,6 @@
 package com.tao.xiaoyuanyuan.server;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,12 +10,15 @@ import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
+import android.util.EventLog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebChromeClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,12 +27,14 @@ import com.tao.xiaoyuanyuan.R;
 import com.tao.xiaoyuanyuan.event.BackGroundServiceEvent;
 import com.tao.xiaoyuanyuan.event.ShowEvent;
 import com.tao.xiaoyuanyuan.event.ShowWidthEvent;
+import com.tao.xiaoyuanyuan.event.SuoEvent;
 import com.tao.xiaoyuanyuan.event.SuoServerEvent;
 import com.tao.xiaoyuanyuan.rxbus2.RxBus;
 import com.tao.xiaoyuanyuan.rxbus2.Subscribe;
 import com.tao.xiaoyuanyuan.rxbus2.ThreadMode;
 import com.tao.xiaoyuanyuan.utils.ToastUtils;
 import com.tao.xiaoyuanyuan.utils.UIUtils;
+import com.tao.xiaoyuanyuan.view.MarqueeCTextView;
 
 public class BackGroundService extends Service {
     public static boolean isStarted = false;
@@ -99,6 +105,34 @@ public class BackGroundService extends Service {
         layoutParams.y = 300;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void setEnableDrag(boolean isDrag) {
+        if (layoutParams != null) {
+            if (isDrag) {
+                // 可在全屏幕布局, 不受状态栏影响 // 最初不可获取焦点, 这样不影响底层应用接收触摸事件
+                layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+            } else {
+                // 可在全屏幕布局, 不受状态栏影响 // 最初不可获取焦点, 这样不影响底层应用接收触摸事件
+                layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE//是否能透传点击事件
+                        | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+            }
+        } else {
+            setWindowView();
+        }
+        if (mView != null) {
+            windowManager.removeView(mView);
+            windowManager.addView(mView, layoutParams);
+        } else {
+            showFloatingWindow();
+        }
+
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void showFloatingWindow() {
@@ -119,10 +153,16 @@ public class BackGroundService extends Service {
                 public void onClick(View v) {
                     isSuo = !isSuo;
                     if (isSuo) {
+                        //锁定 不能滑动
                         ToastUtils.showToast("已锁定🔒！");
+                        suoIv.setVisibility(View.GONE);
+                        setEnableDrag(false);
+
                     } else {
                         ToastUtils.showToast("已解锁🔚！");
+                        suoIv.setVisibility(View.VISIBLE);
                     }
+                    RxBus.getDefault().post(new SuoEvent(isSuo));
                 }
             });
             mView.setOnTouchListener(new FloatingOnTouchListener());
@@ -143,9 +183,11 @@ public class BackGroundService extends Service {
         }
     }
 
+    @SuppressLint("NewApi")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(SuoServerEvent suoServerEvent) {
         isSuo = suoServerEvent.isIssuo();
+        setEnableDrag(!isSuo);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

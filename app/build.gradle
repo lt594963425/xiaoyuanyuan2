@@ -8,7 +8,6 @@ android {
             storePassword "al123456"
             keyAlias "airline"
             keyPassword "al123456"
-
         }
         debug {
             storeFile file("./keystore/airline.jks")
@@ -23,7 +22,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
-        versionName "1.5"
+        versionName "1.10"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

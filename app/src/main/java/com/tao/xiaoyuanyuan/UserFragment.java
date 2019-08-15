@@ -238,6 +238,7 @@ public class UserFragment extends Fragment {
                 mTextSize = progress + 1;
                 if (fromUser) {
                     suspensionTextEt.setTextSize(mTextSize);
+                    LogUtils.e("文字大小", "----" + progress);
                     SPManager.saveInt(SPManager.SP_MAIN_FLAG, "mTextSize", mTextSize);
 
                 }
@@ -377,7 +378,6 @@ public class UserFragment extends Fragment {
         if (mSwitchCompat != null) {
             mSwitchCompat.setChecked(suoEvent.isIssuo());
         }
-
     }
 
     private CompositeDisposable compositeDisposable;

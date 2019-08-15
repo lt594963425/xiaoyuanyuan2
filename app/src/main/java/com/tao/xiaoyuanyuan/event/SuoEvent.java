@@ -15,9 +15,6 @@ public class SuoEvent {
         this.issuo = issuo;
     }
 
-    public SuoEvent() {
-    }
-
     public boolean isIssuo() {
         return issuo;
     }
