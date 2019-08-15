@@ -76,4 +76,20 @@ public class LogUtils {
         return s;
     }
 
+    /**
+     * 把日志存储到文件中
+     *
+     * @param log  需要存储的日志
+     * @param path 存储路径
+     *  LogUtil.log2File(sbody, FileUtils.getDir("history") + System.currentTimeMillis());
+     */
+    public static void log2File(String log, String path) {
+        log2File(log, path, true);
+    }
+
+    public static void log2File(String log, String path, boolean append) {
+        synchronized (mLogLock) {
+            FileUtils.writeFile(log + "\r\n", path, append);
+        }
+    }
 }

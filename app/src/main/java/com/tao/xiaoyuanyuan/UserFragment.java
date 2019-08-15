@@ -1,6 +1,5 @@
 package com.tao.xiaoyuanyuan;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -24,7 +23,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.tao.xiaoyuanyuan.event.BackGroundServiceEvent;
@@ -79,7 +77,7 @@ public class UserFragment extends Fragment {
     public int mTextColor = Color.BLACK;
     //字体大小
     private int mTextSize = 15;
-    private int mWidth = 385;
+    private int mWidth = 360;
     public RadioButton mFontType1;
     public RadioButton mFontType2;
     public RadioButton mFontType3;

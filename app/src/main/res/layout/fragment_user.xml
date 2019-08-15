@@ -41,7 +41,6 @@
                 android:visibility="invisible" />
         </LinearLayout>
 
-
         <EditText
             android:id="@+id/suspension_text_et"
             android:layout_width="match_parent"
@@ -50,7 +49,8 @@
             android:background="@null"
             android:gravity="start|center"
             android:hint="请输入显示文字"
-            android:paddingStart="@dimen/dp_10"
+            android:maxHeight="@dimen/dp_100"
+            android:paddingStart="@dimen/dp_5"
             android:paddingTop="@dimen/dp_5"
             android:paddingBottom="@dimen/dp_6"
             android:textColor="@color/black"
@@ -97,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/dp_5"
-                    android:max="30"
+                    android:max="50"
                     android:progress="15" />
             </LinearLayout>
 
@@ -298,16 +298,10 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/evaporateTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/dp_100"
-                android:padding="@dimen/dp_5"
-                android:text="@string/app_name"
-                android:textSize="@dimen/sp_12" />
+
         </LinearLayout>
+
+
     </ScrollView>
 
     <LinearLayout

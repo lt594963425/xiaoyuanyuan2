@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 
 /**
  * Created by Android Studio.
@@ -48,16 +49,22 @@ public class MarqueeTextView extends android.support.v7.widget.AppCompatTextView
         return true;
     }
 
-    @Override
-    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        if (focused) {
-            super.onFocusChanged(focused, direction, previouslyFocusedRect);
-        }
-    }
+//    @Override
+//    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+//        if (focused) {
+//            super.onFocusChanged(focused, direction, previouslyFocusedRect);
+//        }
+//    }
+//
+//    @Override
+//    public void onWindowFocusChanged(boolean hasWindowFocus) {
+//        if (hasWindowFocus)
+//            super.onWindowFocusChanged(hasWindowFocus);
+//    }
+
 
     @Override
-    public void onWindowFocusChanged(boolean hasWindowFocus) {
-        if (hasWindowFocus)
-            super.onWindowFocusChanged(hasWindowFocus);
+    public boolean onTouchEvent(MotionEvent event) {
+        return false;
     }
 }

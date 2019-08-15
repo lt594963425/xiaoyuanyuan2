@@ -1,15 +1,24 @@
 package com.tao.xiaoyuanyuan;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
+import com.tao.xiaoyuanyuan.utils.LogUtils;
 import com.tao.xiaoyuanyuan.utils.StatusBarUtils;
+import com.tao.xiaoyuanyuan.utils.UIUtils;
 import com.tao.xiaoyuanyuan.view.XToolbar;
+import com.tbruyelle.rxpermissions2.Permission;
+import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -17,6 +26,8 @@ import com.tao.xiaoyuanyuan.view.XToolbar;
  */
 public class UserActivity extends AppCompatActivity {
     private XToolbar mXToolbar;
+    private RxPermissions mRxPermissions;
+    private String TAG = "UserActivity";
 
     /**
      * 隐藏状态栏的高度
@@ -64,9 +75,33 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
         mXToolbar = findViewById(R.id.toolbar);
-        mXToolbar.setTitle("小圆圆专用");
+        mXToolbar.setTitle(UIUtils.getResources().getString(R.string.app_name));
+        requestPermissions();
+        CrashHandler.getInstance().init(this);
     }
 
+    @SuppressLint("CheckResult")
+    private void requestPermissions() {
+        mRxPermissions = new RxPermissions(this);
+        mRxPermissions.requestEach(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.SYSTEM_ALERT_WINDOW,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.READ_PHONE_STATE)
+                .subscribe(new Consumer<Permission>() {
+                    @Override
+                    public void accept(Permission permission) throws Exception {
+                        if (permission.granted) {
+                        } else if (permission.shouldShowRequestPermissionRationale) {
+                            // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
+                            LogUtils.d(TAG, permission.name + " is denied. More info should be provided.");
+                        } else {
+                            // 用户拒绝了该权限，并且选中『不再询问』
+                            Log.d(TAG, permission.name + " is denied.");
+                        }
+                    }
+                });
+
+    }
 
     @Override
     protected void onDestroy() {
