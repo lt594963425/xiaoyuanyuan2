@@ -1,4 +1,4 @@
-package com.paiwujie.modulebase.base;
+package com.tao.xiaoyuanyuan.base;
 
 
 import android.graphics.Color;
@@ -11,12 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.alibaba.android.arouter.launcher.ARouter;
-import com.android.library.utils.LogUtil;
-import com.android.library.utils.StatusBarUtils;
-import com.android.view.BaseLoadingDialog;
-import com.android.view.XToolbar;
-import com.paiwujie.modulebase.R;
+
+import com.tao.xiaoyuanyuan.R;
+import com.tao.xiaoyuanyuan.utils.LogUtils;
+import com.tao.xiaoyuanyuan.utils.StatusBarUtils;
+import com.tao.xiaoyuanyuan.view.BaseLoadingDialog;
+import com.tao.xiaoyuanyuan.view.XToolbar;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -31,11 +31,7 @@ import io.reactivex.disposables.Disposable;
 
 
 public class BaseActivity extends AppCompatActivity {
-
     private XToolbar mToolbar;
-    private View mNotDataView;
-    private View mErrorView;
-
 
     protected XToolbar getToolbar() {
         return mToolbar;
@@ -75,10 +71,9 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppManager.getAppManager().addActivity(this);
-        ARouter.getInstance().inject(this);
         compositeDisposable = new CompositeDisposable();
-        LogUtil.i("BaseActivity", "*****onCreate()方法******");
-        initBaseView();
+        LogUtils.i("BaseActivity", "------------------onCreate()方法--------------");
+
     }
 
 
@@ -86,6 +81,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         AppManager.getAppManager().removeActivity(this);
+        LogUtils.i("BaseActivity", "------------------onDestroy()方法--------------");
     }
 
     /**
@@ -158,10 +154,5 @@ public class BaseActivity extends AppCompatActivity {
         if (compositeDisposable != null) compositeDisposable.dispose();
     }
 
-    public void initBaseView() {
-        mNotDataView = getLayoutInflater().inflate(R.layout.common_empty_view, null, false);
-        mErrorView = getLayoutInflater().inflate(R.layout.common_error_view, null, false);
-
-    }
 
 }

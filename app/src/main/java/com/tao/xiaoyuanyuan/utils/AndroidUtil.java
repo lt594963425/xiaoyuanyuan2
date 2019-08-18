@@ -1,4 +1,4 @@
-package com.android.utils;
+package com.tao.xiaoyuanyuan.utils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -24,7 +24,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
-
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;

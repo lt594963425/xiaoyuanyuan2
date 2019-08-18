@@ -23,7 +23,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.utils.LogUtil;
 import com.tao.xiaoyuanyuan.R;
+import com.tao.xiaoyuanyuan.base.App;
+import com.tao.xiaoyuanyuan.db.RealmHelper;
+import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean;
+import com.tao.xiaoyuanyuan.db.entity.RealmLikeBean;
 import com.tao.xiaoyuanyuan.event.BackGroundServiceEvent;
 import com.tao.xiaoyuanyuan.event.ShowEvent;
 import com.tao.xiaoyuanyuan.event.ShowWidthEvent;
@@ -32,14 +37,17 @@ import com.tao.xiaoyuanyuan.event.SuoServerEvent;
 import com.tao.xiaoyuanyuan.rxbus2.RxBus;
 import com.tao.xiaoyuanyuan.rxbus2.Subscribe;
 import com.tao.xiaoyuanyuan.rxbus2.ThreadMode;
+import com.tao.xiaoyuanyuan.utils.DateUitl;
+import com.tao.xiaoyuanyuan.utils.LogUtils;
+import com.tao.xiaoyuanyuan.utils.RxTimerUtil;
 import com.tao.xiaoyuanyuan.utils.ToastUtils;
 import com.tao.xiaoyuanyuan.utils.UIUtils;
-import com.tao.xiaoyuanyuan.view.MarqueeCTextView;
+
+import java.util.Date;
 
 public class BackGroundService extends Service {
     public static boolean isStarted = false;
     public static final String TAG = "LocationGroundService";
-    private boolean isRun = false;
     public TextView mSuspensionTextShow;
     //文字内容
     public String mTextString = "";
@@ -53,6 +61,10 @@ public class BackGroundService extends Service {
     private boolean isSuo = false;
     public View mView;
     public LinearLayout mContentTextLly;
+    public ImageView mSuoIv;
+    public TextView mTotalTimeTv;
+
+    public RxTimerUtil mRxTimerUtil;
 
     //创建服务时调用
     @Override
@@ -63,7 +75,6 @@ public class BackGroundService extends Service {
         }
         isStarted = true;
         Log.d(TAG, "onCreate");
-        isRun = false;
         setWindowView();
     }
 
@@ -73,12 +84,33 @@ public class BackGroundService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand");
         mTextString = intent.getStringExtra("mTextString");
-        mTextType = intent.getIntExtra("mTextString", Typeface.NORMAL);
+        mTextType = intent.getIntExtra("mTextType", Typeface.NORMAL);
         mTextColor = intent.getIntExtra("mTextColor", Color.BLACK);
         mTextSize = intent.getIntExtra("mTextSize", 15);
         width = intent.getIntExtra("mWidth", width);
         showFloatingWindow();
+        startTime();
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void startTime() {
+
+        if (mRxTimerUtil == null) {
+            mRxTimerUtil = new RxTimerUtil();
+        }
+        mRxTimerUtil.startTimer(App.getInstance().getOnlineTime(), new RxTimerUtil.RxTimerNextListener() {
+            @Override
+            public void onTimerNext(long number) {
+                if (mTotalTimeTv != null) {
+                    App.getInstance().setOnlineTime(number);
+                    mTotalTimeTv.setText("在线:" + DateUitl.formatTime(number)[0]);
+                    OnLineTimeBean onLineTimeBean = new OnLineTimeBean();
+                    onLineTimeBean.setId(DateUitl.getformatCurrentTime(System.currentTimeMillis()));
+                    onLineTimeBean.setOnLinetime(App.getInstance().getOnlineTime());
+                    App.getRealmHelper().insertOnlineTimeBean(onLineTimeBean);
+                }
+            }
+        });
     }
 
     private WindowManager windowManager;
@@ -138,9 +170,14 @@ public class BackGroundService extends Service {
     private void showFloatingWindow() {
         if (Settings.canDrawOverlays(this)) {
             mView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_window_menu, null);
-            mSuspensionTextShow = mView.findViewById(R.id.suspensionText_show);
             mContentTextLly = mView.findViewById(R.id.content_text_lly);
-            ImageView suoIv = mView.findViewById(R.id.suo_iv);
+            //滚动文字
+            mSuspensionTextShow = mView.findViewById(R.id.suspensionText_show);
+            //锁定
+            mSuoIv = mView.findViewById(R.id.suo_iv);
+            //在线时间
+            mTotalTimeTv = mView.findViewById(R.id.total_time_tv);
+            mTotalTimeTv.setText("在线:" + DateUitl.formatTime(App.getInstance().getOnlineTime())[0]);
             mSuspensionTextShow.setText(mTextString);
             mSuspensionTextShow.setTypeface(Typeface.DEFAULT, mTextType);
             mSuspensionTextShow.setTextColor(mTextColor);
@@ -148,19 +185,20 @@ public class BackGroundService extends Service {
             mContentTextLly.getLayoutParams().width = UIUtils.dip2Px(width);
             mContentTextLly.requestLayout();
             windowManager.addView(mView, layoutParams);
-            suoIv.setOnClickListener(new View.OnClickListener() {
+            //下排
+
+            mSuoIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     isSuo = !isSuo;
                     if (isSuo) {
                         //锁定 不能滑动
-                        ToastUtils.showToast("已锁定🔒！");
-                        suoIv.setVisibility(View.GONE);
+                        ToastUtils.showToast("已锁定🔒");
+                        mSuoIv.setVisibility(View.GONE);
                         setEnableDrag(false);
-
                     } else {
-                        ToastUtils.showToast("已解锁🔚！");
-                        suoIv.setVisibility(View.VISIBLE);
+                        ToastUtils.showToast("已解锁🔒");
+                        mSuoIv.setVisibility(View.VISIBLE);
                     }
                     RxBus.getDefault().post(new SuoEvent(isSuo));
                 }
@@ -188,6 +226,20 @@ public class BackGroundService extends Service {
     public void onEventBus(SuoServerEvent suoServerEvent) {
         isSuo = suoServerEvent.isIssuo();
         setEnableDrag(!isSuo);
+        if (isSuo) {//锁定
+            ToastUtils.showToast("已锁定🔒");
+            if (mSuoIv != null) {
+                mSuoIv.setVisibility(View.GONE);
+            }
+        } else {//解锁
+            ToastUtils.showToast("已解锁🔒");
+            if (mSuoIv != null) {
+                mSuoIv.setVisibility(View.VISIBLE);
+            }
+
+        }
+
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -203,7 +255,15 @@ public class BackGroundService extends Service {
     public void onEventBus(ShowEvent showEvent) {
         if (showEvent.isShow()) {
             showFloatView();
+            startTime();
         } else {
+            if (mRxTimerUtil != null) {
+                mRxTimerUtil.clearTimer();
+            }
+            OnLineTimeBean onLineTimeBean = new OnLineTimeBean();
+            onLineTimeBean.setId(DateUitl.getformatCurrentTime(System.currentTimeMillis()));
+            onLineTimeBean.setOnLinetime(App.getInstance().getOnlineTime());
+            App.getRealmHelper().insertOnlineTimeBean(onLineTimeBean);
             hideFloatView();
         }
     }
@@ -212,10 +272,11 @@ public class BackGroundService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy");
+        LogUtil.e(TAG, "------------------onDestroy----------------------");
         if (!RxBus.getDefault().isRegistered(this)) {
             RxBus.getDefault().unregister(this);
         }
+        mRxTimerUtil.clearTimer();
 
     }
 

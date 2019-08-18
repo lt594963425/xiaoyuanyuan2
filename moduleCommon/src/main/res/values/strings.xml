@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">FloatLibrary</string>
+    <string name="brvah_app_name">Library</string>
+    <string name="brvah_loading">正在加载中...</string>
+    <string name="brvah_load_failed">加载失败，请点我重试</string>
+    <string name="brvah_load_end">没有更多数据</string>
+
+    <string name="net_error">网络访问错误，请稍后再试</string>
+    <string name="empty">还没有数据哦</string>
+    <string name="loading">请稍后...</string>
+    <string name="reload">重新尝试</string>
+    <string name="no_net">网络不可用,请检查你的网络</string>
+
+    <string name="network_err">网络访问错误，请稍后再试</string>
+    <string name="empty_network_error">加载失败，请点我重试</string>
+    <string name="empty_no_data">没有数据哦,点击重试</string>
+</resources>

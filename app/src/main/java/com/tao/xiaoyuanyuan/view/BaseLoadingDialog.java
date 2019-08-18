@@ -1,4 +1,4 @@
-package com.android.view;
+package com.tao.xiaoyuanyuan.view;
 
 
 import android.app.Dialog;
@@ -6,7 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.Window;
 
-import com.android.library.R;
+import com.tao.xiaoyuanyuan.R;
 
 
 public class BaseLoadingDialog extends Dialog {

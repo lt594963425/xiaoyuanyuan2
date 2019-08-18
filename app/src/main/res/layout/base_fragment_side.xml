@@ -1,210 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/contain_right_llt"
     android:layout_width="@dimen/dp_233"
     android:layout_height="match_parent"
-    android:layout_gravity="end"
-    android:background="@color/white"
+    android:layout_gravity="start"
+    android:background="@color/gray"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_lly"
-        android:overScrollMode="never">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/white"
+        android:gravity="center_vertical">
 
-        <RelativeLayout
+        <ImageView
+            android:layout_width="@dimen/dp_70"
+            android:layout_height="@dimen/dp_70"
+            android:layout_marginTop="@dimen/dp_10"
+            android:gravity="center"
+            android:src="@mipmap/logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginStart="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp_10"
+            android:gravity="center"
+            android:text="@string/app_name" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@color/role_right_gray" />
+
+    <RadioGroup
+        android:id="@+id/rg_Orientation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="120dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/text_type_0"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/dp_40"
+            android:layout_margin="@dimen/dp_2"
+            android:layout_weight="1"
+            android:background="@drawable/shape_sett_center_text_bg"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:text="主页"
+            android:textColor="@drawable/selector_sett_text_color" />
 
-            <LinearLayout
-                android:id="@+id/ad_type_title_lly"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_20"
-                android:layout_marginStart="@dimen/dp_14"
-                android:layout_marginTop="@dimen/dp_42"
-                android:layout_marginEnd="@dimen/dp_14"
-                android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/text_type_1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_margin="@dimen/dp_2"
+            android:layout_weight="1"
+            android:background="@drawable/shape_sett_center_text_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="在线时长"
+            android:textColor="@drawable/selector_sett_text_color" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:text="@string/ad_type"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sp_12"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:id="@+id/click_show_more_llt"
-                    android:layout_width="@dimen/dp_50"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:gravity="end"
-                    android:visibility="visible">
-
-                    <ImageView
-                        android:scaleType="fitXY"
-                        android:id="@+id/click_more_iv"
-                        android:layout_width="@dimen/dp_16"
-                        android:layout_height="@dimen/dp_8"
-                        android:layout_gravity="center_vertical|end"
-                        android:layout_marginEnd="@dimen/dp_5"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:src="@drawable/xiala" />
-                </LinearLayout>
+        <RadioButton
+            android:id="@+id/text_type_2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_margin="@dimen/dp_2"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_weight="1"
+            android:background="@drawable/shape_sett_center_text_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="学习笔记"
+            android:textColor="@drawable/selector_sett_text_color" />
 
 
-            </LinearLayout>
+        <RadioButton
+            android:id="@+id/text_type_3"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_margin="@dimen/dp_2"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_weight="1"
+            android:background="@drawable/shape_sett_center_text_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="小可爱的日记"
+            android:textColor="@drawable/selector_sett_text_color" />
 
-            <RelativeLayout
-                android:id="@+id/ad_type_lly"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ad_type_title_lly"
-                android:layout_marginStart="@dimen/dp_14"
-                android:layout_marginTop="@dimen/dp_14"
-                android:layout_marginEnd="@dimen/dp_14"
-                android:layout_marginBottom="@dimen/dp_24">
+        <RadioButton
+            android:id="@+id/text_type_4"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_margin="@dimen/dp_2"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_weight="1"
+            android:background="@drawable/shape_sett_center_text_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="大哥的私房钱"
+            android:textColor="@drawable/selector_sett_text_color" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+    </RadioGroup>
 
-                <LinearLayout
-                    android:id="@+id/progress_status_llt"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_150"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/white"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        style="?android:attr/progressBarStyleSmall"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:gravity="center"
-                        android:text="数据加载中"
-                        android:textColor="@color/tv_talk_content" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <View
-                android:id="@+id/line"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_1"
-                android:layout_below="@+id/ad_type_lly"
-                android:background="#ffe6e6e6" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/line"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp_14"
-                    android:layout_marginTop="@dimen/dp_19"
-                    android:text="金币区间"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sp_12"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_45"
-                    android:layout_marginStart="@dimen/dp_14"
-                    android:layout_marginTop="@dimen/dp_14"
-                    android:layout_marginEnd="@dimen/dp_14"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/min_money_et"
-                        android:layout_width="@dimen/dp_73"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/bg_gray_ovl_3"
-                        android:gravity="center"
-                        android:hint="最低价"
-                        android:inputType="number|numberDecimal"
-                        android:padding="@dimen/dp_5"
-                        android:textSize="@dimen/sp_10" />
-
-                    <View
-                        android:layout_width="@dimen/dp_17"
-                        android:layout_height="@dimen/dp_1"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/dp_17"
-                        android:layout_marginEnd="@dimen/dp_17"
-                        android:background="@color/gray_b7"
-                        android:gravity="center" />
-
-                    <EditText
-                        android:id="@+id/max_money_et"
-                        android:layout_width="@dimen/dp_73"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_gray_ovl_3"
-                        android:gravity="center"
-                        android:hint="最高价"
-                        android:inputType="number|numberDecimal"
-                        android:padding="@dimen/dp_5"
-                        android:textSize="@dimen/sp_10" />
-                </LinearLayout>
-            </LinearLayout>
-        </RelativeLayout>
-    </ScrollView>
 
     <LinearLayout
-        android:id="@+id/bottom_lly"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_43"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/bg_gradual_change_color"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_40">
 
         <TextView
-            android:id="@+id/reset"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/reset"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_12" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="@dimen/dp_20"
+            android:id="@+id/version"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
             android:layout_gravity="center"
-            android:background="#ffd2d2d2" />
-
-        <TextView
-            android:id="@+id/determine"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:background="@color/white"
             android:gravity="center"
-            android:text="@string/determine"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_12" />
+            android:text="版本：" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

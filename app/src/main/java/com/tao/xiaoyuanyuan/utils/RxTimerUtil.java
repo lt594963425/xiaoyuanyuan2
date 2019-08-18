@@ -1,4 +1,4 @@
-package com.android.library.utils;
+package com.tao.xiaoyuanyuan.utils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +27,7 @@ public class RxTimerUtil {
         void onSubscribe(Disposable d);
 
         void onNext(Integer integer);
+
         void onStart();
 
         void onError(Throwable throwable);
@@ -85,6 +86,7 @@ public class RxTimerUtil {
         observable.subscribe(observer);
 
     }
+
     /**
      * 结束调用
      */
@@ -113,11 +115,11 @@ public class RxTimerUtil {
     }
 
     /**
-     * 计时器
+     * 开始计时器
      *
      * @param rxTimerNextListener
      */
-    public void startTimer( final RxTimerNextListener rxTimerNextListener) {
+    public void startTimer(Long time, RxTimerNextListener rxTimerNextListener) {
         Observable.interval(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -129,7 +131,7 @@ public class RxTimerUtil {
 
                     @Override
                     public void onNext(Long aLong) {
-                        rxTimerNextListener.onTimerNext(aLong);
+                        rxTimerNextListener.onTimerNext(time + aLong);
                     }
 
                     @Override
@@ -140,18 +142,15 @@ public class RxTimerUtil {
                     @Override
                     public void onComplete() {
                         clearTimer();
-
                     }
                 });
     }
 
 
-
     /**
-     * 结束调用
+     * 结束计时器的调用
      */
     public void clearTimer() {
-
         if (timerDisposable != null && !timerDisposable.isDisposed()) {
             timerDisposable.dispose();
         }

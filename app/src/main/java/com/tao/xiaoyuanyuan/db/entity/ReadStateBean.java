@@ -1,4 +1,4 @@
-package com.example.modulebase.data.entity;
+package com.tao.xiaoyuanyuan.db.entity;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

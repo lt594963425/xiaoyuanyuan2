@@ -1,4 +1,4 @@
-package com.example.modulebase.base.appupdate;
+package com.tao.xiaoyuanyuan.appupdate;
 
 
 import android.annotation.SuppressLint;
@@ -26,16 +26,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.android.utils.AndroidUtil;
-import com.android.utils.LogUtil;
-import com.android.utils.StringUtils;
-import com.android.utils.ToastUtils;
-import com.android.utils.UIUtils;
-import com.android.view.IOSDialog;
-import com.android.view.IOSDialogUtils;
-
-import com.example.modulebase.R;
-import com.example.modulebase.base.base.App;
+import com.tao.xiaoyuanyuan.R;
+import com.tao.xiaoyuanyuan.base.App;
+import com.tao.xiaoyuanyuan.utils.AndroidUtil;
+import com.tao.xiaoyuanyuan.utils.DialogUtils;
+import com.tao.xiaoyuanyuan.utils.LogUtils;
+import com.tao.xiaoyuanyuan.utils.StringUtils;
+import com.tao.xiaoyuanyuan.utils.ToastUtils;
+import com.tao.xiaoyuanyuan.utils.UIUtils;
+import com.tao.xiaoyuanyuan.view.BaseDialog;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.download.DownloadListener;
@@ -101,7 +100,7 @@ public class AppUpdateService {
                 }
             }
             builder = new NotificationCompat.Builder(App.getInstance(), "updateApp");
-            builder.setContentTitle("派无界正在下载...") //设置通知标题
+            builder.setContentTitle(UIUtils.getResources().getString(R.string.app_name) + "正在下载...") //设置通知标题
                     .setSmallIcon(R.mipmap.ic_launcher_round)
                     .setLargeIcon(BitmapFactory.decodeResource(App.getInstance().getResources(), R.mipmap.ic_launcher_round)) //设置通知的大图标
                     .setDefaults(Notification.DEFAULT_LIGHTS) //设置通知的提醒方式： 呼吸灯
@@ -202,7 +201,7 @@ public class AppUpdateService {
                 appTotalLength = (int) task.getTotalLength();
                 appdownLength = (int) task.getSavedLength();
                 int per = (int) (((appdownLength * 1.0) / (appTotalLength * 1.0)) * 100);
-                LogUtil.e("下载进度", "下载进度:" + appdownLength + "====" + appTotalLength);
+                LogUtils.e("下载进度", "下载进度:" + appdownLength + "====" + appTotalLength);
                 builder.setProgress(appTotalLength, appdownLength, false);
                 builder.setContentText("下载进度:" + per + "%");
                 builder.setChannelId("updateApp");
@@ -216,7 +215,7 @@ public class AppUpdateService {
                 appdownLength = (int) task.getSavedLength();
                 int per = (int) (((appdownLength * 1.0) / (appTotalLength * 1.0)) * 100);
                 builder.setProgress(appTotalLength, appdownLength, false);
-                LogUtil.e("下载进度", "下载进度:" + appdownLength + "====" + appTotalLength);
+                LogUtils.e("下载进度", "下载进度:" + appdownLength + "====" + appTotalLength);
                 builder.setContentText("下载进度:" + per + "%");
                 builder.setChannelId("updateApp");
                 notification = builder.build();
@@ -246,20 +245,20 @@ public class AppUpdateService {
     }
 
     private void openNotification(final Activity activity) {
-        IOSDialogUtils iosDialogUtils = IOSDialogUtils.getInstance();
-        iosDialogUtils.clickDialogIos(activity, "消息通知未打开，请手动打开", "取消", "去打开",
-                new IOSDialogUtils.OnButtonClickListener() {
+        DialogUtils.getInstance().showDialog(activity, "消息通知权限未打开，请手动打开",
+                new DialogUtils.OnButtonClickListener() {
                     @Override
-                    public void onPositiveButtonClick(IOSDialog dialog) {
+                    public void onPositiveButtonClick(BaseDialog dialog) {
                         dialog.dismiss();
                         AndroidUtil.openAppSetting(activity);
                     }
 
                     @Override
-                    public void onCancelButtonClick(IOSDialog dialog) {
+                    public void onCancelButtonClick(BaseDialog dialog) {
                         dialog.dismiss();
                     }
                 });
+
     }
 
     private void downLoadApp(Activity activity) {
@@ -289,7 +288,7 @@ public class AppUpdateService {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(App.getInstance(), "com.mvp.lt.airlineview.fileprovider", apkFile);
+            Uri contentUri = FileProvider.getUriForFile(App.getInstance(), App.getInstance().getPackageName() + ".fileprovider", apkFile);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else {
             intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");

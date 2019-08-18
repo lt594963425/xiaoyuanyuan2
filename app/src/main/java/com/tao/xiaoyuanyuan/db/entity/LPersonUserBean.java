@@ -1,4 +1,4 @@
-package com.example.modulebase.data.entity;
+package com.tao.xiaoyuanyuan.db.entity;
 
 /**
  * Created by Dian on 2018/12/23

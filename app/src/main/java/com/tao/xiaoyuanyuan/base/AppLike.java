@@ -1,4 +1,4 @@
-package com.example.modulebase.base.base;
+package com.tao.xiaoyuanyuan.base;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -11,11 +11,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.utils.LogUtil;
-import com.android.utils.ToastUtils;
-import com.example.modulebase.R;
-import com.example.modulebase.base.AppManager;
-import com.example.modulebase.base.appupdate.AppUpdateService;
+
+import com.tao.xiaoyuanyuan.R;
+import com.tao.xiaoyuanyuan.appupdate.AppUpdateService;
+import com.tao.xiaoyuanyuan.utils.LogUtils;
+import com.tao.xiaoyuanyuan.utils.ToastUtils;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
@@ -25,14 +25,12 @@ import com.tencent.bugly.beta.upgrade.UpgradeListener;
 import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
 import com.tencent.tinker.entry.DefaultApplicationLike;
 
-
 import java.util.Locale;
 
 
 public class AppLike extends DefaultApplicationLike {
-    //正式发布 APP_ID 改为 35f64f80bb
-    public static final String APP_ID = "1638ccad67";
-    public static final String APP_CHANNEL = "DEBUG"; // TODO 自定义渠道
+    public static final String APP_ID = "d8f4d9438a";
+    public static final String APP_CHANNEL = "官方"; // TODO 自定义渠道
     private static final String TAG = "OnUILifecycleListener";
 
     public AppLike(Application application, int tinkerFlags,
@@ -61,7 +59,7 @@ public class AppLike extends DefaultApplicationLike {
     @SuppressLint("NewApi")
     private void buglyInit() {
         Beta.autoInit = true;
-        Beta.autoCheckUpgrade = false;
+        Beta.autoCheckUpgrade = true;
         Beta.upgradeCheckPeriod = 30 * 1000;
         Beta.initDelay = 5 * 1000;
         Beta.largeIconId = R.mipmap.ic_launcher;
@@ -76,7 +74,7 @@ public class AppLike extends DefaultApplicationLike {
         Beta.upgradeDialogLifecycleListener = new UILifecycleListener<UpgradeInfo>() {
             @Override
             public void onCreate(Context context, View view, UpgradeInfo upgradeInfo) {
-                LogUtil.e(TAG, "onCreate");
+                LogUtils.e(TAG, "onCreate");
                 // 注：可通过这个回调方式获取布局的控件，如果设置了id，可通过findViewById方式获取，如果设置了tag，可以通过findViewWithTag，具体参考下面例子:
 
                 // 通过id方式获取控件，并更改imageview图片
@@ -100,27 +98,27 @@ public class AppLike extends DefaultApplicationLike {
 
             @Override
             public void onStart(Context context, View view, UpgradeInfo upgradeInfo) {
-                LogUtil.e(TAG, "---onStart---");
+                LogUtils.e(TAG, "---onStart---");
             }
 
             @Override
             public void onResume(Context context, View view, UpgradeInfo upgradeInfo) {
-                LogUtil.e(TAG, "onResume");
+                LogUtils.e(TAG, "onResume");
             }
 
             @Override
             public void onPause(Context context, View view, UpgradeInfo upgradeInfo) {
-                LogUtil.e(TAG, "onPause");
+                LogUtils.e(TAG, "onPause");
             }
 
             @Override
             public void onStop(Context context, View view, UpgradeInfo upgradeInfo) {
-                LogUtil.e(TAG, "onStop");
+                LogUtils.e(TAG, "onStop");
             }
 
             @Override
             public void onDestroy(Context context, View view, UpgradeInfo upgradeInfo) {
-                LogUtil.e(TAG, "onDestory");
+                LogUtils.e(TAG, "onDestory");
             }
         };
 
@@ -136,14 +134,14 @@ public class AppLike extends DefaultApplicationLike {
              */
             @Override
             public void onUpgrade(int ret, UpgradeInfo strategy, boolean isManual, boolean isSilence) {
-                LogUtil.e(TAG, "---onUpgrade---");
+                LogUtils.e(TAG, "---onUpgrade---");
                 if (strategy != null) {
                     Beta.getUpgradeInfo();
                     AppUpdateService.getInstance().showDownloadAppView(AppManager.getAppManager().currentActivity());
                 } else {
                     UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
                     if (upgradeInfo != null) {
-                        LogUtil.e(TAG, "---onUpgrade---本地：" + upgradeInfo.versionName);
+                        LogUtils.e(TAG, "---onUpgrade---本地：" + upgradeInfo.versionName);
                     }
                 }
             }
@@ -154,7 +152,7 @@ public class AppLike extends DefaultApplicationLike {
             public void onUpgradeSuccess(boolean isManual) {
                 if (isManual) {
 
-                    LogUtil.e(TAG, "检测到新版本");
+                    LogUtils.e(TAG, "检测到新版本");
                 }
                 //EventBus.getDefault().post(new AppUpdateEvent());
             }
@@ -176,7 +174,7 @@ public class AppLike extends DefaultApplicationLike {
 
             @Override
             public void onDownloadCompleted(boolean b) {
-                LogUtil.e(TAG, "下载完成" + b);
+                LogUtils.e(TAG, "下载完成" + b);
             }
 
             @Override
@@ -198,13 +196,13 @@ public class AppLike extends DefaultApplicationLike {
         Beta.betaPatchListener = new BetaPatchListener() {
             @Override
             public void onPatchReceived(String patchFile) {
-                LogUtil.e(TAG, "补丁下载地址:" + patchFile);
+                LogUtils.e(TAG, "补丁下载地址:" + patchFile);
 
             }
 
             @Override
             public void onDownloadReceived(long savedLength, long totalLength) {
-                LogUtil.e(TAG, "补丁下载中:" + String.format(Locale.getDefault(), "%s %d%%",
+                LogUtils.e(TAG, "补丁下载中:" + String.format(Locale.getDefault(), "%s %d%%",
                         Beta.strNotificationDownloading,
                         (int) (totalLength == 0 ? 0 : savedLength * 100 / totalLength)));
 
@@ -212,26 +210,26 @@ public class AppLike extends DefaultApplicationLike {
 
             @Override
             public void onDownloadSuccess(String msg) {
-                LogUtil.e(TAG, "补丁下载成功");
+                LogUtils.e(TAG, "补丁下载成功");
                 // Toast.makeText(getApplication(), "补丁下载成功", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onDownloadFailure(String msg) {
-                LogUtil.e(TAG, "补丁下载失败:" + msg);
+                LogUtils.e(TAG, "补丁下载失败:" + msg);
                 // Toast.makeText(getApplication(), "补丁下载失败", Toast.LENGTH_SHORT).show();
 
             }
 
             @Override
             public void onApplySuccess(String msg) {
-                LogUtil.e(TAG, "补丁应用成功");
+                LogUtils.e(TAG, "补丁应用成功");
                 // Toast.makeText(getApplication(), "补丁应用成功", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onApplyFailure(String msg) {
-                LogUtil.e(TAG, "补丁应用失败:" + msg);
+                LogUtils.e(TAG, "补丁应用失败:" + msg);
                 // Toast.makeText(getApplication(), "补丁应用失败", Toast.LENGTH_SHORT).show();
             }
 
@@ -245,7 +243,7 @@ public class AppLike extends DefaultApplicationLike {
         //  todo 多渠道需求塞入
 //        String channel = WalleChannelReader.getChannel(getApplication());
 //        Bugly.setAppChannel(getApplication(), channel);
-        Bugly.setAppChannel(getApplication(), "官方");
+        Bugly.setAppChannel(getApplication(), APP_CHANNEL);
         // 这里实现SDK初始化，appId替换成你的在Bugly平台申请的appId 1638ccad67
         //App渠道
         Bugly.init(getApplication(), APP_ID, false);

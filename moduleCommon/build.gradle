@@ -1,0 +1,34 @@
+apply plugin: 'com.android.library'
+
+android {
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+    compileSdkVersion globalConfiguration.androidCompileSdkVersion
+    buildToolsVersion globalConfiguration.androidBuildToolsVersion
+
+    defaultConfig {
+        minSdkVersion globalConfiguration.androidMinSdkVersion
+        targetSdkVersion globalConfiguration.androidTargetSdkVersion
+
+    }
+    buildTypes {
+        release {
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    def androidDependencies = rootProject.ext.androidDependencies
+    def viewDependencies = rootProject.ext.viewDependencies
+    def dataDependencies = rootProject.ext.dataDependencies
+    implementation androidDependencies.appcompat_v7
+    api androidDependencies.recyclerView
+    //rx
+    api dataDependencies.rxbinding2
+    //图片
+    implementation viewDependencies.glide
+
+    implementation project(path: ':modulePicture')
+    api project(':RxKit')
+}

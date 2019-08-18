@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="275dp"
     android:layout_height="170dp"
-    android:background="@drawable/shape_dialog_ios"
+    android:background="@drawable/shape_base_dialog"
     android:orientation="vertical">
 
     <TextView
@@ -23,7 +23,7 @@
         android:gravity="center"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:text="灌灌灌灌"
+        android:text=""
         android:textColor="#666666"
         android:textSize="16sp" />
 
@@ -60,7 +60,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="确认"
-            android:textColor="@color/color_pink"
+            android:textColor="@color/colorPrimary"
             android:textSize="15sp" />
     </LinearLayout>
 </LinearLayout>

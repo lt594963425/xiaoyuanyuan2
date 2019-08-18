@@ -1,9 +1,11 @@
-package com.example.modulebase.data.source.db;
+package com.tao.xiaoyuanyuan.db;
 
 
 
-import com.example.modulebase.data.entity.GoldManagerBean;
-import com.example.modulebase.data.entity.RealmLikeBean;
+
+import com.tao.xiaoyuanyuan.db.entity.GoldManagerBean;
+import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean;
+import com.tao.xiaoyuanyuan.db.entity.RealmLikeBean;
 
 import java.util.List;
 
@@ -16,6 +18,8 @@ import java.util.List;
 public interface DBHelper {
 
     void insertNewsId(int id);
+
+    void insertOnlineTimeBean(OnLineTimeBean id);
 
     /**
      * 查询 阅读记录

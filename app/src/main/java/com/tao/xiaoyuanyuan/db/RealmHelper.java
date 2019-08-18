@@ -1,16 +1,16 @@
-package com.example.modulebase.data.source.db;
+package com.tao.xiaoyuanyuan.db;
 
 
-import com.example.modulebase.data.entity.GoldManagerBean;
-import com.example.modulebase.data.entity.ReadStateBean;
-import com.example.modulebase.data.entity.RealmLikeBean;
+import com.android.utils.LogUtil;
+import com.tao.xiaoyuanyuan.db.entity.GoldManagerBean;
+import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean;
+import com.tao.xiaoyuanyuan.db.entity.ReadStateBean;
+import com.tao.xiaoyuanyuan.db.entity.RealmLikeBean;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 /**
@@ -42,6 +42,7 @@ public class RealmHelper implements DBHelper {
         mRealm.commitTransaction();
     }
 
+
     /**
      * 查询 阅读记录
      *
@@ -57,6 +58,46 @@ public class RealmHelper implements DBHelper {
             }
         }
         return false;
+    }
+
+    /**
+     * 增加 在线记录
+     *
+     * @param bean
+     */
+    @Override
+    public void insertOnlineTimeBean(OnLineTimeBean bean) {
+        mRealm.beginTransaction();
+        mRealm.copyToRealmOrUpdate(bean);
+        mRealm.commitTransaction();
+    }
+
+    /**
+     * 查询 在线记录
+     */
+
+    public List<OnLineTimeBean> queryOnlineTimeBean() {
+        mRealm.beginTransaction();
+        RealmResults<OnLineTimeBean> realmLikeBeans = mRealm.where(OnLineTimeBean.class).findAll();
+        mRealm.commitTransaction();
+        return mRealm.copyFromRealm(realmLikeBeans);
+    }
+
+    /**
+     * 查询 在线记录
+     */
+
+    public OnLineTimeBean queryOnlineTimeBeanByDate(String id) {
+        LogUtil.e("查询", id);
+        OnLineTimeBean data = mRealm.where(OnLineTimeBean.class).equalTo("id", id).findFirst();
+        if (data != null) {
+            LogUtil.e("查询", data.getOnLinetime() + "");
+            return data;
+        } else {
+            LogUtil.e("查询", "没有查到---------------");
+            return null;
+        }
+
     }
 
     /**

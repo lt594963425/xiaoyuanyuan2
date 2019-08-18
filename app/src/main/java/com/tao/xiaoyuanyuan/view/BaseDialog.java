@@ -8,15 +8,16 @@ import android.view.Window;
 
 import com.tao.xiaoyuanyuan.R;
 
-
-public class BaseLoadingDialog extends Dialog {
+/***
+ * BaseDialog
+ */
+public class BaseDialog extends Dialog {
     public Context context;
+    public int resLayout;
 
-    public BaseLoadingDialog(Context context) {
+    public BaseDialog(Context context, int resLayout) {
         super(context, R.style.base_picture_alert_dialog);
         this.context = context;
-        setCancelable(true);
-        setCanceledOnTouchOutside(false);
         Window window = getWindow();
         window.setWindowAnimations(R.style.BaseDialogWindowStyle);
     }
@@ -24,6 +25,6 @@ public class BaseLoadingDialog extends Dialog {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.common_loading);
+        setContentView(resLayout);
     }
 }

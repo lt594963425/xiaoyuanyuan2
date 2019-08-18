@@ -25,6 +25,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.tao.xiaoyuanyuan.base.App;
+import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean;
 import com.tao.xiaoyuanyuan.event.BackGroundServiceEvent;
 import com.tao.xiaoyuanyuan.event.ShowEvent;
 import com.tao.xiaoyuanyuan.event.ShowWidthEvent;
@@ -35,6 +37,7 @@ import com.tao.xiaoyuanyuan.rxbus2.Subscribe;
 import com.tao.xiaoyuanyuan.rxbus2.ThreadMode;
 import com.tao.xiaoyuanyuan.server.BackGroundService;
 import com.tao.xiaoyuanyuan.utils.AnimalUtil;
+import com.tao.xiaoyuanyuan.utils.DateUitl;
 import com.tao.xiaoyuanyuan.utils.LogUtils;
 import com.tao.xiaoyuanyuan.utils.SPManager;
 import com.tao.xiaoyuanyuan.utils.ToastUtils;
@@ -85,6 +88,7 @@ public class UserFragment extends Fragment {
     public ImageView mClearText;
     public RadioGroup mRgOrientation;
     public SeekBar mSeekbarWidth;
+    public BackGroundServiceEvent mBackGroundService;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -137,6 +141,15 @@ public class UserFragment extends Fragment {
         } else if (mTextType == Typeface.BOLD_ITALIC) {
             mRgOrientation.check(R.id.text_type_4);
         }
+
+        OnLineTimeBean onLineTimeBean = App.getRealmHelper()
+                .queryOnlineTimeBeanByDate(DateUitl.getformatCurrentTime(System.currentTimeMillis()));
+        if (onLineTimeBean != null) {
+            App.getInstance().setOnlineTime(onLineTimeBean.getOnLinetime());
+            LogUtils.e("时间  初始化", onLineTimeBean.getOnLinetime() + "");
+        } else {
+            App.getInstance().setOnlineTime(0);
+        }
         initView();
 
         return view;
@@ -154,6 +167,7 @@ public class UserFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
+
                 RxBus.getDefault().post(new ShowEvent(false));
             }
         });
@@ -320,12 +334,12 @@ public class UserFragment extends Fragment {
      * 调节文字内容
      */
     public void postChangeText() {
-        BackGroundServiceEvent backGroundService = new BackGroundServiceEvent();
-        backGroundService.setString(mTextString);
-        backGroundService.setTextSize(mTextSize);
-        backGroundService.setTextType(mTextType);
-        backGroundService.setTextColor(mTextColor);
-        RxBus.getDefault().post(backGroundService);
+        mBackGroundService = new BackGroundServiceEvent();
+        mBackGroundService.setString(mTextString);
+        mBackGroundService.setTextSize(mTextSize);
+        mBackGroundService.setTextType(mTextType);
+        mBackGroundService.setTextColor(mTextColor);
+        RxBus.getDefault().post(mBackGroundService);
     }
 
     /**
