@@ -4,6 +4,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.utils.GlideUtils;
+import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tao.xiaoyuanyuan.R;
@@ -20,7 +21,7 @@ import java.util.List;
  * Date: 2019/8/16 0016
  * Time: 上午 11:00
  */
-public class OnlineHistoryVAdapter extends BaseQuickAdapter<OnLineTimeBean, BaseViewHolder> {
+public class OnlineHistoryVAdapter extends BaseItemDraggableAdapter<OnLineTimeBean, BaseViewHolder> {
 
     public OnlineHistoryVAdapter(List<OnLineTimeBean> list) {
         super(R.layout.adapter_item_online_view, list);

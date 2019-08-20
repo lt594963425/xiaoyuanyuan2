@@ -1,4 +1,4 @@
-package com.tao.xiaoyuanyuan;
+package com.tao.xiaoyuanyuan.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tao.xiaoyuanyuan.R;
 import com.tao.xiaoyuanyuan.adapter.OnlineHistoryVAdapter;
 import com.tao.xiaoyuanyuan.base.App;
 import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean;
@@ -22,8 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
+
 
 public class OnLineHistoryFragment extends Fragment {
 

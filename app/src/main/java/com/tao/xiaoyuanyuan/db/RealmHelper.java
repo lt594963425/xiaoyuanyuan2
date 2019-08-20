@@ -3,15 +3,19 @@ package com.tao.xiaoyuanyuan.db;
 
 import com.android.utils.LogUtil;
 import com.tao.xiaoyuanyuan.db.entity.GoldManagerBean;
+import com.tao.xiaoyuanyuan.db.entity.NormalTextBean;
 import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean;
 import com.tao.xiaoyuanyuan.db.entity.ReadStateBean;
 import com.tao.xiaoyuanyuan.db.entity.RealmLikeBean;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by codeest on 16/8/16.
@@ -78,9 +82,53 @@ public class RealmHelper implements DBHelper {
 
     public List<OnLineTimeBean> queryOnlineTimeBean() {
         mRealm.beginTransaction();
-        RealmResults<OnLineTimeBean> realmLikeBeans = mRealm.where(OnLineTimeBean.class).findAll();
+        List<String> list = new ArrayList<>();
+        RealmResults<OnLineTimeBean> realmLikeBeans = mRealm.where(OnLineTimeBean.class).findAllAsync();
+        realmLikeBeans.load();
         mRealm.commitTransaction();
-        return mRealm.copyFromRealm(realmLikeBeans);
+        List<OnLineTimeBean> lineTimeBeans = mRealm.copyFromRealm(realmLikeBeans);
+        Collections.reverse(lineTimeBeans);
+        return lineTimeBeans;
+    }
+
+    /**
+     * 增加 常用语
+     *
+     * @param bean
+     */
+
+    public void insertNormalTextBean(NormalTextBean bean) {
+        mRealm.beginTransaction();
+        mRealm.copyToRealmOrUpdate(bean);
+        mRealm.commitTransaction();
+    }
+
+    /**
+     * 查询 常用语
+     */
+
+    public List<NormalTextBean> queryNormalTextBean() {
+        mRealm.beginTransaction();
+        RealmResults<NormalTextBean> realmLikeBeans = mRealm.where(NormalTextBean.class).findAllAsync();
+//        realmLikeBeans.addChangeListener();
+        realmLikeBeans.load();
+        mRealm.commitTransaction();
+        List<NormalTextBean> normalTextBeans = mRealm.copyFromRealm(realmLikeBeans);
+        Collections.reverse(normalTextBeans);
+        return normalTextBeans;
+    }
+
+    /**
+     * 删除 常用语
+     */
+
+    public void deleteNormalTextBean(String text) {
+        NormalTextBean data = mRealm.where(NormalTextBean.class).equalTo("text", text).findFirst();
+        mRealm.beginTransaction();
+        if (data != null) {
+            data.deleteFromRealm();
+        }
+        mRealm.commitTransaction();
     }
 
     /**

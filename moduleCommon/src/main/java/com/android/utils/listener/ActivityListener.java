@@ -10,6 +10,9 @@ import android.app.Activity;
  */
 
 public interface ActivityListener {
-    void openDrawer();
+    void openRightDrawer();
+
+    void openLeftDrawer();
+
     Activity getActivity();
 }

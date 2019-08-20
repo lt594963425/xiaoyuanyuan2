@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply from: 'tinker-support.gradle'
 apply plugin: 'realm-android'
+apply plugin: 'kotlin-android'
 android {
 
     signingConfigs {
@@ -22,19 +23,19 @@ android {
         applicationId "com.tao.xiaoyuanyuan"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 3  //
-        versionName "1.3"
+        versionCode 5  //
+        versionName "1.5"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions.includeCompileClasspath = true
         }
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [AROUTER_MODULE_NAME: project.getName()]
-            }
-        }
+//        javaCompileOptions {
+//            annotationProcessorOptions {
+//                arguments = [AROUTER_MODULE_NAME: project.getName()]
+//            }
+//        }
     }
     buildTypes {
         release {
@@ -43,7 +44,7 @@ android {
             signingConfig signingConfigs.release
         }
         debug {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
         }
@@ -76,4 +77,6 @@ dependencies {
 
     implementation viewDependencies.butterKnife
     annotationProcessor viewDependencies.apt_butterKnife
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.21"
 }

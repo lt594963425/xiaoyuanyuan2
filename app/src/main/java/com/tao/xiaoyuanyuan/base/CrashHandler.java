@@ -1,4 +1,4 @@
-package com.tao.xiaoyuanyuan;
+package com.tao.xiaoyuanyuan.base;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;

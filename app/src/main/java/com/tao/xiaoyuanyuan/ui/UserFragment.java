@@ -1,5 +1,6 @@
-package com.tao.xiaoyuanyuan;
+package com.tao.xiaoyuanyuan.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -24,10 +25,14 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.android.utils.listener.ActivityListener;
 import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.tao.xiaoyuanyuan.R;
 import com.tao.xiaoyuanyuan.base.App;
+import com.tao.xiaoyuanyuan.db.entity.NormalTextBean;
 import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean;
 import com.tao.xiaoyuanyuan.event.BackGroundServiceEvent;
+import com.tao.xiaoyuanyuan.event.SelectUpdateTextEvent;
 import com.tao.xiaoyuanyuan.event.ShowEvent;
 import com.tao.xiaoyuanyuan.event.ShowWidthEvent;
 import com.tao.xiaoyuanyuan.event.SuoEvent;
@@ -89,6 +94,14 @@ public class UserFragment extends Fragment {
     public RadioGroup mRgOrientation;
     public SeekBar mSeekbarWidth;
     public BackGroundServiceEvent mBackGroundService;
+    public ImageView mAddInputText;
+    public ActivityListener mActivityListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivityListener = (ActivityListener) context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -97,6 +110,7 @@ public class UserFragment extends Fragment {
             RxBus.getDefault().register(this);
         }
 
+        mAddInputText = view.findViewById(R.id.add_input_text);
         mColorPickViewLly = view.findViewById(R.id.color_pick_view_lly);
         suspensionTextEt = view.findViewById(R.id.suspension_text_et);
         suspensionTextSize = view.findViewById(R.id.suspension_text_size);
@@ -156,6 +170,15 @@ public class UserFragment extends Fragment {
     }
 
     private void initView() {
+        mAddInputText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mActivityListener != null) {
+                    mActivityListener.openRightDrawer();
+                }
+                AnimalUtil.startRotation(mAddInputText, 0, 90);
+            }
+        });
         openSuspension.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -339,6 +362,7 @@ public class UserFragment extends Fragment {
         mBackGroundService.setTextSize(mTextSize);
         mBackGroundService.setTextType(mTextType);
         mBackGroundService.setTextColor(mTextColor);
+
         RxBus.getDefault().post(mBackGroundService);
     }
 
@@ -380,6 +404,9 @@ public class UserFragment extends Fragment {
             startIntent.putExtra("mTextColor", mTextColor);
             startIntent.putExtra("mTextSize", mTextSize);
             startIntent.putExtra("mWidth", mWidth);
+            NormalTextBean normalTextBean = new NormalTextBean();
+            normalTextBean.setText(mTextString);
+            App.getRealmHelper().insertNormalTextBean(normalTextBean);
             if (getActivity() != null) {
                 getActivity().startService(startIntent);
             }
@@ -392,6 +419,15 @@ public class UserFragment extends Fragment {
         if (mSwitchCompat != null) {
             mSwitchCompat.setChecked(suoEvent.isIssuo());
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(SelectUpdateTextEvent selectUpdateTextEvent) {
+        mTextString = selectUpdateTextEvent.getSeledtedText();
+        SPManager.saveString(SPManager.SP_MAIN_FLAG, "mTextString", mTextString);
+        mClearText.setVisibility(View.VISIBLE);
+        suspensionTextEt.setText(mTextString);
+        postChangeText();
     }
 
     private CompositeDisposable compositeDisposable;

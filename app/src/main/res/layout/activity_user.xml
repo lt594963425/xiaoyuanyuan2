@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".UserActivity"
+        tools:context=".ui.UserActivity"
         tools:ignore="MissingDefaultResource">
 
         <include layout="@layout/toolbar" />
@@ -20,6 +20,8 @@
             android:layout_height="match_parent" />
 
     </LinearLayout>
-    <!--侧滑菜单 筛选-->
+    <!--侧滑菜单 左侧滑-->
     <include layout="@layout/base_fragment_side" />
+    <!--侧滑菜单 右侧滑-->
+    <include layout="@layout/base_fragment_right_side" />
 </android.support.v4.widget.DrawerLayout>

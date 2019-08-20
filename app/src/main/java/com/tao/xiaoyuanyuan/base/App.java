@@ -9,7 +9,6 @@ import android.os.Build;
 import android.support.multidex.MultiDex;
 
 
-import com.tao.xiaoyuanyuan.CrashHandler;
 import com.tao.xiaoyuanyuan.db.RealmHelper;
 import com.tao.xiaoyuanyuan.utils.LogUtils;
 import com.tencent.tinker.loader.app.TinkerApplication;
@@ -52,7 +51,7 @@ public class App extends TinkerApplication {
         RealmConfiguration configuration = new RealmConfiguration.Builder()
                 .name(RealmHelper.DB_NAME)
                 .deleteRealmIfMigrationNeeded()
-                .schemaVersion(0)
+                .schemaVersion(1)
                 .build();
         Realm.setDefaultConfiguration(configuration);
         realmHelper = new RealmHelper();

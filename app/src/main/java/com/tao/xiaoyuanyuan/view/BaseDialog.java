@@ -18,6 +18,7 @@ public class BaseDialog extends Dialog {
     public BaseDialog(Context context, int resLayout) {
         super(context, R.style.base_picture_alert_dialog);
         this.context = context;
+        this.resLayout = resLayout;
         Window window = getWindow();
         window.setWindowAnimations(R.style.BaseDialogWindowStyle);
     }
