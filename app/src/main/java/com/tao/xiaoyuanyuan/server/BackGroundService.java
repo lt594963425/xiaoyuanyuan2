@@ -3,6 +3,7 @@ package com.tao.xiaoyuanyuan.server;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import com.android.utils.LogUtil;
 import com.tao.xiaoyuanyuan.R;
 import com.tao.xiaoyuanyuan.base.App;
+import com.tao.xiaoyuanyuan.broad.BootCompleteReceive;
 import com.tao.xiaoyuanyuan.db.RealmHelper;
 import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean;
 import com.tao.xiaoyuanyuan.db.entity.RealmLikeBean;
@@ -76,6 +78,12 @@ public class BackGroundService extends Service {
         isStarted = true;
         Log.d(TAG, "onCreate");
         setWindowView();
+        BootCompleteReceive screenBroadcastReceiver = new BootCompleteReceive();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        getApplicationContext().registerReceiver(screenBroadcastReceiver, filter);
     }
 
     //服务执行的操作

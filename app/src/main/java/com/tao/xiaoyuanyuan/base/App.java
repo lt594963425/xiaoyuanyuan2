@@ -5,10 +5,12 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.os.Build;
 import android.support.multidex.MultiDex;
 
 
+import com.android.utils.GPSUtils;
 import com.tao.xiaoyuanyuan.db.RealmHelper;
 import com.tao.xiaoyuanyuan.utils.LogUtils;
 import com.tencent.tinker.loader.app.TinkerApplication;
@@ -57,6 +59,7 @@ public class App extends TinkerApplication {
         realmHelper = new RealmHelper();
         initNotificationManager();
         LogUtils.d("App", "------------------------初始化-----------------------------------");
+
 
     }
 

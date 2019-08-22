@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.android.utils.GPSUtils;
 import com.android.utils.LogUtil;
 import com.android.utils.listener.ActivityListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -312,15 +314,35 @@ public class UserActivity extends BaseActivity implements ActivityListener {
         mRxPermissions = new RxPermissions(this);
         mRxPermissions.requestEach(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.SYSTEM_ALERT_WINDOW,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CHANGE_NETWORK_STATE,
                 Manifest.permission.CHANGE_WIFI_STATE,
                 Manifest.permission.INTERNET,
+                Manifest.permission.WAKE_LOCK,
+                Manifest.permission.SYSTEM_ALERT_WINDOW,
+                Manifest.permission.DISABLE_KEYGUARD,
+                Manifest.permission.RECEIVE_BOOT_COMPLETED,
                 Manifest.permission.READ_PHONE_STATE)
                 .subscribe(new Consumer<Permission>() {
                     @Override
                     public void accept(Permission permission) throws Exception {
                         if (permission.granted) {
+                            GPSUtils.getInstance(UserActivity.this).getLngAndLat(new GPSUtils.OnLocationResultListener() {
+                                @Override
+                                public void onLocationResult(Location location) {
+                                    LogUtil.e("位置",location.getLatitude()+"--"+location.getLongitude()+"---"+location.getAltitude());
+                                    LogUtil.e("位置",location.getExtras()+"--"+location.getLongitude());
+
+                                }
+
+                                @Override
+                                public void OnLocationChange(Location location) {
+                                    LogUtil.e("位置",location.getLatitude()+"--"+location.getLongitude()+"---"+location.getAltitude());
+                                    LogUtil.e("位置",location.getLatitude()+"--"+location.getLongitude());
+                                }
+                            });
                         } else if (permission.shouldShowRequestPermissionRationale) {
                             // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
                             LogUtils.d(TAG, permission.name + " is denied. More info should be provided.");
