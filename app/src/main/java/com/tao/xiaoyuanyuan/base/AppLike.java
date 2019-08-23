@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.meituan.android.walle.WalleChannelReader;
 import com.tao.xiaoyuanyuan.R;
 import com.tao.xiaoyuanyuan.appupdate.AppUpdateService;
 import com.tao.xiaoyuanyuan.utils.LogUtils;
@@ -30,8 +31,8 @@ import java.util.Locale;
 
 public class AppLike extends DefaultApplicationLike {
     public static final String APP_ID = "d8f4d9438a";
-    public static final String APP_CHANNEL = "官方"; // TODO 自定义渠道
-    private static final String TAG = "OnUILifecycleListener";
+    public String APP_CHANNEL = "官方"; // TODO 自定义渠道
+    private static  String TAG = "AppLike";
 
     public AppLike(Application application, int tinkerFlags,
                    boolean tinkerLoadVerifyFlag, long applicationStartElapsedTime,
@@ -241,7 +242,7 @@ public class AppLike extends DefaultApplicationLike {
         // 设置开发设备，默认为false，上传补丁如果下发范围指定为“开发设备”，需要调用此接口来标识开发设备
         Bugly.setIsDevelopmentDevice(getApplication(), true);
         //  todo 多渠道需求塞入
-//        String channel = WalleChannelReader.getChannel(getApplication());
+        APP_CHANNEL = WalleChannelReader.getChannel(getApplication());
 //        Bugly.setAppChannel(getApplication(), channel);
         Bugly.setAppChannel(getApplication(), APP_CHANNEL);
         // 这里实现SDK初始化，appId替换成你的在Bugly平台申请的appId 1638ccad67

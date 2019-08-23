@@ -214,6 +214,7 @@ public class UserFragment extends Fragment {
                         SPManager.saveString(SPManager.SP_MAIN_FLAG, "mTextString", mTextString);
                         mClearText.setVisibility(View.VISIBLE);
                         postChangeText();
+
                     }
                 }));
 
@@ -362,7 +363,6 @@ public class UserFragment extends Fragment {
         mBackGroundService.setTextSize(mTextSize);
         mBackGroundService.setTextType(mTextType);
         mBackGroundService.setTextColor(mTextColor);
-
         RxBus.getDefault().post(mBackGroundService);
     }
 
@@ -407,6 +407,7 @@ public class UserFragment extends Fragment {
             NormalTextBean normalTextBean = new NormalTextBean();
             normalTextBean.setText(mTextString);
             App.getRealmHelper().insertNormalTextBean(normalTextBean);
+
             if (getActivity() != null) {
                 getActivity().startService(startIntent);
             }

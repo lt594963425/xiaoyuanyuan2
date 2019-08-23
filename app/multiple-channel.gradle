@@ -1,0 +1,15 @@
+apply plugin: 'walle'
+/**
+ * 生成渠道包: ./gradlew clean assembleReleaseChannels
+ * 生成单个渠道包: ./gradlew clean assembleReleaseChannels -PchannelList=fq_1
+ * 生成多个渠道包: ./gradlew clean assembleReleaseChannels -PchannelList=fq_1,fq_2
+ * 具体用法: https://github.com/Meituan-Dianping/walle
+ */
+walle {
+    // 指定渠道包的输出路径
+    apkOutputFolder = new File("${project.buildDir}/outputs/channels");
+    // 定制渠道包的APK的文件名称
+    apkFileNameFormat = '${appName}-${packageName}-${channel}-${buildType}-v${versionName}-${versionCode}-${buildTime}.apk';
+    // 渠道配置文件
+    channelFile = new File("${project.getProjectDir()}/channel")
+}
