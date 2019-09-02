@@ -104,7 +104,7 @@
             android:background="@drawable/shape_sett_center_text_bg"
             android:button="@null"
             android:gravity="center"
-            android:text="大哥的私房钱"
+            android:text="媛宝宝的私房钱"
             android:textColor="@drawable/selector_sett_text_color" />
 
     </RadioGroup>

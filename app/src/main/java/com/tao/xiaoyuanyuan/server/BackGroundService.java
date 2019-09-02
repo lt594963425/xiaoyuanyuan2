@@ -24,7 +24,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.utils.GlideUtils;
 import com.android.utils.LogUtil;
+import com.android.view.CircleImageView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.tao.xiaoyuanyuan.R;
 import com.tao.xiaoyuanyuan.base.App;
 import com.tao.xiaoyuanyuan.broad.BootCompleteReceive;
@@ -32,6 +37,10 @@ import com.tao.xiaoyuanyuan.db.RealmHelper;
 import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean;
 import com.tao.xiaoyuanyuan.db.entity.RealmLikeBean;
 import com.tao.xiaoyuanyuan.event.BackGroundServiceEvent;
+import com.tao.xiaoyuanyuan.event.ImageServiceEvent;
+import com.tao.xiaoyuanyuan.event.ImageShowEvent;
+import com.tao.xiaoyuanyuan.event.ImageShowWHEvent;
+import com.tao.xiaoyuanyuan.event.ImageTypeEvent;
 import com.tao.xiaoyuanyuan.event.ShowEvent;
 import com.tao.xiaoyuanyuan.event.ShowWidthEvent;
 import com.tao.xiaoyuanyuan.event.SuoEvent;
@@ -60,6 +69,7 @@ public class BackGroundService extends Service {
     //字体大小
     private int mTextSize = 15;
     private int width = 385;
+    private int imagewidthH = 100;
     private boolean isSuo = false;
     public View mView;
     public LinearLayout mContentTextLly;
@@ -67,6 +77,15 @@ public class BackGroundService extends Service {
     public TextView mTotalTimeTv;
 
     public RxTimerUtil mRxTimerUtil;
+    public CircleImageView mCircleImageView;
+    public View mMImageView;
+    /**
+     * 图片设置
+     */
+    private boolean isShowPicture = false;
+    public LinearLayout mImageLly;
+    public String mImagePath;
+
 
     //创建服务时调用
     @Override
@@ -77,7 +96,9 @@ public class BackGroundService extends Service {
         }
         isStarted = true;
         Log.d(TAG, "onCreate");
+        //文本设置
         setWindowView();
+        setWindowImageView();
         BootCompleteReceive screenBroadcastReceiver = new BootCompleteReceive();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -96,7 +117,10 @@ public class BackGroundService extends Service {
         mTextColor = intent.getIntExtra("mTextColor", Color.BLACK);
         mTextSize = intent.getIntExtra("mTextSize", 15);
         width = intent.getIntExtra("mWidth", width);
+        mImagePath = intent.getStringExtra("imagePath");
+        isShowPicture = intent.getBooleanExtra("isShowPicture", false);
         showFloatingWindow();
+        setImageWindowView();
         startTime();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -122,41 +146,63 @@ public class BackGroundService extends Service {
     }
 
     private WindowManager windowManager;
-    private WindowManager.LayoutParams layoutParams;
+    private WindowManager.LayoutParams layoutParamsText;
+    private WindowManager.LayoutParams layoutParamsImage;
 
     public void setWindowView() {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        layoutParams = new WindowManager.LayoutParams();
+        layoutParamsText = new WindowManager.LayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            layoutParamsText.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         } else {
-            layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+            layoutParamsText.type = WindowManager.LayoutParams.TYPE_PHONE;
         }
-        layoutParams.format = PixelFormat.RGBA_8888;
-        layoutParams.gravity = Gravity.CENTER | Gravity.TOP;
+        layoutParamsText.format = PixelFormat.RGBA_8888;
+        layoutParamsText.gravity = Gravity.CENTER | Gravity.TOP;
         // 可在全屏幕布局, 不受状态栏影响 // 最初不可获取焦点, 这样不影响底层应用接收触摸事件
-        layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+        layoutParamsText.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                 | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        layoutParams.x = 300;
-        layoutParams.y = 300;
+        layoutParamsText.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParamsText.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParamsText.x = 300;
+        layoutParamsText.y = 300;
+    }
+
+    public void setWindowImageView() {
+        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        layoutParamsImage = new WindowManager.LayoutParams();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            layoutParamsImage.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            layoutParamsImage.type = WindowManager.LayoutParams.TYPE_PHONE;
+        }
+        layoutParamsImage.format = PixelFormat.RGBA_8888;
+        layoutParamsImage.gravity = Gravity.CENTER | Gravity.TOP;
+        // 可在全屏幕布局, 不受状态栏影响 // 最初不可获取焦点, 这样不影响底层应用接收触摸事件
+        layoutParamsImage.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+        layoutParamsImage.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParamsImage.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParamsImage.x = 0;
+        layoutParamsImage.y = 0;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void setEnableDrag(boolean isDrag) {
-        if (layoutParams != null) {
+        if (layoutParamsText != null) {
             if (isDrag) {
                 // 可在全屏幕布局, 不受状态栏影响 // 最初不可获取焦点, 这样不影响底层应用接收触摸事件
-                layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                layoutParamsText.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                         | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
             } else {
                 // 可在全屏幕布局, 不受状态栏影响 // 最初不可获取焦点, 这样不影响底层应用接收触摸事件
-                layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                layoutParamsText.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                         | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE//是否能透传点击事件
@@ -167,7 +213,7 @@ public class BackGroundService extends Service {
         }
         if (mView != null) {
             windowManager.removeView(mView);
-            windowManager.addView(mView, layoutParams);
+            windowManager.addView(mView, layoutParamsText);
         } else {
             showFloatingWindow();
         }
@@ -175,7 +221,37 @@ public class BackGroundService extends Service {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
+    public void setImageEnableDrag(boolean isDrag) {
+        if (layoutParamsImage != null) {
+            if (isDrag) {
+                // 可在全屏幕布局, 不受状态栏影响 // 最初不可获取焦点, 这样不影响底层应用接收触摸事件
+                layoutParamsImage.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+            } else {
+                // 可在全屏幕布局, 不受状态栏影响 // 最初不可获取焦点, 这样不影响底层应用接收触摸事件
+                layoutParamsImage.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE//是否能透传点击事件
+                        | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+            }
+        } else {
+            setWindowImageView();
+        }
+        if (mMImageView != null) {
+            windowManager.removeView(mMImageView);
+            windowManager.addView(mMImageView, layoutParamsImage);
+        } else {
+            setImageWindowView();
+        }
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void showFloatingWindow() {
+        //添加轮播文字
         if (Settings.canDrawOverlays(this)) {
             mView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_window_menu, null);
             mContentTextLly = mView.findViewById(R.id.content_text_lly);
@@ -192,7 +268,7 @@ public class BackGroundService extends Service {
             mSuspensionTextShow.setTextSize(mTextSize);
             mContentTextLly.getLayoutParams().width = UIUtils.dip2Px(width);
             mContentTextLly.requestLayout();
-            windowManager.addView(mView, layoutParams);
+            windowManager.addView(mView, layoutParamsText);
             //下排
 
             mSuoIv.setOnClickListener(new View.OnClickListener() {
@@ -212,6 +288,92 @@ public class BackGroundService extends Service {
                 }
             });
             mView.setOnTouchListener(new FloatingOnTouchListener());
+
+        }
+    }
+
+    public void setImageWindowView() {
+        //添加贴图
+        mMImageView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_window_picture, null);
+        mImageLly = mMImageView.findViewById(R.id.image_lly);
+        mCircleImageView = mMImageView.findViewById(R.id.top_image_iv);
+        if (isShowPicture) {
+            mMImageView.setVisibility(View.VISIBLE);
+        } else {
+            mMImageView.setVisibility(View.GONE);
+        }
+        GlideUtils.intoImage(mImagePath, mCircleImageView, R.mipmap.logo, R.mipmap.logo);
+        windowManager.addView(mMImageView, layoutParamsImage);
+        mCircleImageView.getLayoutParams().width = UIUtils.dip2Px(imagewidthH);
+        mCircleImageView.getLayoutParams().height = UIUtils.dip2Px(imagewidthH);
+        mCircleImageView.requestLayout();
+        windowManager.updateViewLayout(mMImageView, layoutParamsImage);
+        mMImageView.setOnTouchListener(new FloatingImageOnTouchListener());
+    }
+
+    /**
+     * 是否显示圆形图形 false 显示圆形 true 正方形
+     *
+     * @param disableCircularTransformation
+     */
+    public void setDisableCircularTransformation(boolean disableCircularTransformation) {
+        if (mCircleImageView != null) {
+            mCircleImageView.setDisableCircularTransformation(disableCircularTransformation);
+        }
+    }
+
+    /**
+     * 形状设置
+     *
+     * @param imageTypeEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onImageEventBus(ImageTypeEvent imageTypeEvent) {
+        if (mCircleImageView != null) {
+            setDisableCircularTransformation(imageTypeEvent.isCircle());
+        }
+    }
+
+    /**
+     * 图片设置
+     *
+     * @param imageServiceEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onImageEventBus(ImageServiceEvent imageServiceEvent) {
+        if (mCircleImageView != null) {
+            RequestOptions requestOptions = new RequestOptions()
+                    .centerCrop()
+                    .placeholder(R.mipmap.logo)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .error(R.mipmap.logo);
+            Glide.with(App.getContext())
+                    .load(imageServiceEvent.getPath())
+                    .apply(requestOptions)
+                    .into(mCircleImageView);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(ImageShowWHEvent imageShowWHEvent) {
+        LogUtil.e("图片大小", "--------------------" + imageShowWHEvent.getWidthH());
+        imagewidthH = imageShowWHEvent.getWidthH();
+        if (mCircleImageView != null) {
+            mCircleImageView.getLayoutParams().width = UIUtils.dip2Px(imagewidthH);
+            mCircleImageView.getLayoutParams().height = UIUtils.dip2Px(imagewidthH);
+            mCircleImageView.requestLayout();
+            windowManager.updateViewLayout(mMImageView, layoutParamsImage);
+//            mCircleImageView.invalidate();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(ImageShowEvent imageShowEvent) {
+        isShowPicture = imageShowEvent.isShowpicture();
+        if (isShowPicture) {
+            showImageFloatView();
+        } else {
+            hideImageFloatView();
         }
     }
 
@@ -234,6 +396,7 @@ public class BackGroundService extends Service {
     public void onEventBus(SuoServerEvent suoServerEvent) {
         isSuo = suoServerEvent.isIssuo();
         setEnableDrag(!isSuo);
+        setImageEnableDrag(!isSuo);
         if (isSuo) {//锁定
             ToastUtils.showToast("已锁定🔒");
             if (mSuoIv != null) {
@@ -244,10 +407,7 @@ public class BackGroundService extends Service {
             if (mSuoIv != null) {
                 mSuoIv.setVisibility(View.VISIBLE);
             }
-
         }
-
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -257,7 +417,9 @@ public class BackGroundService extends Service {
             mContentTextLly.getLayoutParams().width = UIUtils.dip2Px(width);
             mContentTextLly.requestLayout();
         }
+
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(ShowEvent showEvent) {
@@ -315,9 +477,41 @@ public class BackGroundService extends Service {
                     int movedY = nowY - y;
                     x = nowX;
                     y = nowY;
-                    layoutParams.x = layoutParams.x + movedX;
-                    layoutParams.y = layoutParams.y + movedY;
-                    windowManager.updateViewLayout(view, layoutParams);
+                    layoutParamsText.x = layoutParamsText.x + movedX;
+                    layoutParamsText.y = layoutParamsText.y + movedY;
+                    windowManager.updateViewLayout(view, layoutParamsText);
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        }
+    }
+
+    private class FloatingImageOnTouchListener implements View.OnTouchListener {
+        private int x;
+        private int y;
+
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+            if (isSuo) {
+                return false;
+            }
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    x = (int) event.getRawX();
+                    y = (int) event.getRawY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    int nowX = (int) event.getRawX();
+                    int nowY = (int) event.getRawY();
+                    int movedX = nowX - x;
+                    int movedY = nowY - y;
+                    x = nowX;
+                    y = nowY;
+                    layoutParamsImage.x = layoutParamsImage.x + movedX;
+                    layoutParamsImage.y = layoutParamsImage.y + movedY;
+                    windowManager.updateViewLayout(view, layoutParamsImage);
                     break;
                 default:
                     break;
@@ -350,6 +544,25 @@ public class BackGroundService extends Service {
     public void showFloatView() {
         if (windowManager != null && mView != null && !mView.isShown()) {
             mView.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    /**
+     * 隐藏悬浮图片View
+     */
+    public void hideImageFloatView() {
+        if (windowManager != null && mMImageView != null && mMImageView.isShown()) {
+            mMImageView.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 显示悬浮图片View
+     */
+    public void showImageFloatView() {
+        if (windowManager != null && mMImageView != null && !mMImageView.isShown()) {
+            mMImageView.setVisibility(View.VISIBLE);
         }
     }
 }

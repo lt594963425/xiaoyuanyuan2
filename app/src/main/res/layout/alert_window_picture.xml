@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/image_lly"
+    android:orientation="vertical"
+    android:padding="@dimen/dp_2">
+
+    <com.android.view.CircleImageView
+        android:id="@+id/top_image_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/logo" />
+</LinearLayout>

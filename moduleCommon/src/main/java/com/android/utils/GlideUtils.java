@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 
 public class GlideUtils {
     public static void intoImage(String path, ImageView imageView,int placeholder,int errorimg) {
+
         RequestOptions requestOptions = new RequestOptions()
                 .centerCrop()
                 .placeholder(placeholder)

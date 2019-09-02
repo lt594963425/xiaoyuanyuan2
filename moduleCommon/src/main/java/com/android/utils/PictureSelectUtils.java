@@ -1,5 +1,6 @@
 package com.android.utils;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 
 import com.android.library.R;
@@ -28,7 +29,7 @@ public class PictureSelectUtils {
      * @param selectedMode
      * @param list
      */
-    public static void pictureSelectorFormPhoto(AppCompatActivity activity, int mode, int maxSelectNum,
+    public static void pictureSelectorFormPhoto(Activity activity, int mode, int maxSelectNum,
                                                 boolean enableCrop, int selectedMode, List<LocalMedia> list,
                                                 int resuestCode) {
         // 进入相册 以下是例子：不需要的api可以不写
@@ -60,7 +61,7 @@ public class PictureSelectUtils {
                 .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
                 .showCropGrid(true)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
                 .openClickSound(true)// 是否开启点击声音
-                .selectionMedia(list)// 是否传入已选图片
+//                .selectionMedia(list)// 是否传入已选图片
                 //.isDragFrame(false)// 是否可拖动裁剪框(固定)
 //                        .videoMaxSecond(15)
 //                        .videoMinSecond(10)

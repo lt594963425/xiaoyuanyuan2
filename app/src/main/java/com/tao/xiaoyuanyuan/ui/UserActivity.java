@@ -8,10 +8,10 @@ import android.graphics.Canvas;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.android.utils.GPSUtils;
 import com.android.utils.LogUtil;
 import com.android.utils.listener.ActivityListener;
+import com.android.view.IOSDialogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
@@ -332,15 +333,15 @@ public class UserActivity extends BaseActivity implements ActivityListener {
                             GPSUtils.getInstance(UserActivity.this).getLngAndLat(new GPSUtils.OnLocationResultListener() {
                                 @Override
                                 public void onLocationResult(Location location) {
-                                    LogUtil.e("位置",location.getLatitude()+"--"+location.getLongitude()+"---"+location.getAltitude());
-                                    LogUtil.e("位置",location.getExtras()+"--"+location.getLongitude());
+                                    LogUtil.e("位置", location.getLatitude() + "--" + location.getLongitude() + "---" + location.getAltitude());
+                                    LogUtil.e("位置", location.getExtras() + "--" + location.getLongitude());
 
                                 }
 
                                 @Override
                                 public void OnLocationChange(Location location) {
-                                    LogUtil.e("位置",location.getLatitude()+"--"+location.getLongitude()+"---"+location.getAltitude());
-                                    LogUtil.e("位置",location.getLatitude()+"--"+location.getLongitude());
+                                    LogUtil.e("位置", location.getLatitude() + "--" + location.getLongitude() + "---" + location.getAltitude());
+                                    LogUtil.e("位置", location.getLatitude() + "--" + location.getLongitude());
                                 }
                             });
                         } else if (permission.shouldShowRequestPermissionRationale) {
@@ -352,6 +353,15 @@ public class UserActivity extends BaseActivity implements ActivityListener {
                         }
                     }
                 });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mUserFragment != null) {
+            mUserFragment.onActivityResult(requestCode, resultCode, data);
+        }
 
     }
 

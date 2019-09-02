@@ -1,5 +1,6 @@
 package com.tao.xiaoyuanyuan.ui;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +27,24 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.android.utils.GlideUtils;
+import com.android.utils.PictureSelectUtils;
 import com.android.utils.listener.ActivityListener;
+import com.android.view.CircleImageView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.tao.xiaoyuanyuan.R;
 import com.tao.xiaoyuanyuan.base.App;
 import com.tao.xiaoyuanyuan.db.entity.NormalTextBean;
 import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean;
 import com.tao.xiaoyuanyuan.event.BackGroundServiceEvent;
+import com.tao.xiaoyuanyuan.event.ImageServiceEvent;
+import com.tao.xiaoyuanyuan.event.ImageShowEvent;
+import com.tao.xiaoyuanyuan.event.ImageShowWHEvent;
+import com.tao.xiaoyuanyuan.event.ImageTypeEvent;
 import com.tao.xiaoyuanyuan.event.SelectUpdateTextEvent;
 import com.tao.xiaoyuanyuan.event.ShowEvent;
 import com.tao.xiaoyuanyuan.event.ShowWidthEvent;
@@ -54,10 +67,16 @@ import com.tao.xiaoyuanyuan.view.colorpicker.slider.AlphaSlider;
 import com.tao.xiaoyuanyuan.view.colorpicker.slider.LightnessSlider;
 
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
+import static android.app.Activity.RESULT_OK;
 import static com.tao.xiaoyuanyuan.utils.UIUtils.getPackageName;
 
 
@@ -96,6 +115,14 @@ public class UserFragment extends Fragment {
     public BackGroundServiceEvent mBackGroundService;
     public ImageView mAddInputText;
     public ActivityListener mActivityListener;
+    public SwitchCompat mSwitchShowImage;
+    public RadioButton mImageType1;
+    public RadioButton mImageType2;
+    public SeekBar mSeekbarImageWidth;
+    public CircleImageView mImagePathIv;
+    private List<LocalMedia> selectList = new ArrayList<>();
+    public String mImagePaht;
+    public boolean isShowPicture;
 
     @Override
     public void onAttach(Context context) {
@@ -134,11 +161,25 @@ public class UserFragment extends Fragment {
         mFontType2 = view.findViewById(R.id.text_type_2);
         mFontType3 = view.findViewById(R.id.text_type_3);
         mFontType4 = view.findViewById(R.id.text_type_4);
+
+
+        //贴图
+        mImagePathIv = view.findViewById(R.id.image_path_iv);
+        mSwitchShowImage = view.findViewById(R.id.switch_show_image);
+        mImageType1 = view.findViewById(R.id.image_type_1);
+        mImageType2 = view.findViewById(R.id.image_type_2);
+        mSeekbarImageWidth = view.findViewById(R.id.seekbar_image_width);
+
         mWidth = SPManager.getInt(SPManager.SP_MAIN_FLAG, "mWidth", mWidth);
         mTextString = SPManager.getString(SPManager.SP_MAIN_FLAG, "mTextString", mTextString);
         mTextType = SPManager.getInt(SPManager.SP_MAIN_FLAG, "mTextType", mTextType);
         mTextColor = SPManager.getInt(SPManager.SP_MAIN_FLAG, "mTextColor", mTextColor);
         mTextSize = SPManager.getInt(SPManager.SP_MAIN_FLAG, "mTextSize", mTextSize);
+        mImagePaht = SPManager.getString(SPManager.SP_MAIN_FLAG, "imagePath", null);
+        isShowPicture = SPManager.getBoolean(SPManager.SP_MAIN_FLAG, "isShowPicture", false);
+        GlideUtils.intoImage(mImagePaht, mImagePathIv, R.mipmap.logo, R.mipmap.logo);
+
+        mSwitchShowImage.setChecked(isShowPicture);
         suspensionTextEt.setText(mTextString);
         suspensionTextEt.setTypeface(Typeface.DEFAULT, mTextType);
         suspensionTextEt.setTextColor(mTextColor);
@@ -233,6 +274,13 @@ public class UserFragment extends Fragment {
                 RxBus.getDefault().post(new SuoServerEvent(isChecked));
             }
         });
+        mSwitchShowImage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                RxBus.getDefault().post(new ImageShowEvent(isChecked));
+                SPManager.saveBoolean(SPManager.SP_MAIN_FLAG, "isShowPicture", isChecked);
+            }
+        });
         colorPickerView.addOnColorChangedListener(new OnColorChangedListener() {
             @Override
             public void onColorChanged(int selectedColor) {
@@ -293,7 +341,22 @@ public class UserFragment extends Fragment {
 
             }
         });
+        mSeekbarImageWidth.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                RxBus.getDefault().post(new ImageShowWHEvent(progress));
+            }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         mSeekbarWidth.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -313,6 +376,16 @@ public class UserFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
+            }
+        });
+
+        mImagePathIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PictureSelectUtils.pictureSelectorFormPhoto(mActivityListener.getActivity(),
+                        PictureMimeType.ofImage(),
+                        1, true, PictureConfig.MULTIPLE,
+                        selectList, PictureConfig.CHOOSE_REQUEST);
             }
         });
         mFontType1.setOnClickListener(new View.OnClickListener() {
@@ -350,6 +423,21 @@ public class UserFragment extends Fragment {
                 suspensionTextEt.setTypeface(Typeface.DEFAULT, mTextType);
                 SPManager.saveInt(SPManager.SP_MAIN_FLAG, "mTextType", mTextType);
                 postChangeText();
+            }
+        });
+
+        mImageType1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mImagePathIv.setDisableCircularTransformation(true);
+                RxBus.getDefault().post(new ImageTypeEvent(true));
+            }
+        });
+        mImageType2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mImagePathIv.setDisableCircularTransformation(false);
+                RxBus.getDefault().post(new ImageTypeEvent(false));
             }
         });
     }
@@ -404,6 +492,8 @@ public class UserFragment extends Fragment {
             startIntent.putExtra("mTextColor", mTextColor);
             startIntent.putExtra("mTextSize", mTextSize);
             startIntent.putExtra("mWidth", mWidth);
+            startIntent.putExtra("imagePath", mImagePaht);
+            startIntent.putExtra("isShowPicture", isShowPicture);
             NormalTextBean normalTextBean = new NormalTextBean();
             normalTextBean.setText(mTextString);
             App.getRealmHelper().insertNormalTextBean(normalTextBean);
@@ -419,6 +509,37 @@ public class UserFragment extends Fragment {
     public void onEventBus(SuoEvent suoEvent) {
         if (mSwitchCompat != null) {
             mSwitchCompat.setChecked(suoEvent.isIssuo());
+        }
+    }
+
+    /**
+     * 修改头像
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case PictureConfig.CHOOSE_REQUEST:
+                    // 图片选择结果回调
+                    selectList = PictureSelector.obtainMultipleResult(data);
+                    // 例如 LocalMedia 里面返回三种path
+                    // 1.media.getPath(); 为原图path
+                    // 2.media.getCutPath();为裁剪后path，需判断media.isCut();是否为true
+                    // 3.media.getCompressPath();为压缩后path，需判断media.isCompressed();是否为true
+                    // 如果裁剪并压缩了，已取压缩路径为准，因为是先裁剪后压缩的
+                    for (LocalMedia media : selectList) {
+                        Log.i("图片-----》", media.getCompressPath());
+                    }
+                    GlideUtils.intoImage(selectList.get(0).getPath(), mImagePathIv, R.mipmap.logo, R.mipmap.logo);
+                    RxBus.getDefault().post(new ImageServiceEvent(selectList.get(0).getPath()));
+                    SPManager.saveString(SPManager.SP_MAIN_FLAG, "imagePath", selectList.get(0).getPath());
+                    break;
+            }
         }
     }
 
