@@ -1,6 +1,7 @@
 package com.tao.xiaoyuanyuan.ui;
 
 import android.app.Dialog;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
@@ -56,6 +58,7 @@ import com.tao.xiaoyuanyuan.rxbus2.ThreadMode;
 import com.tao.xiaoyuanyuan.server.BackGroundService;
 import com.tao.xiaoyuanyuan.utils.AnimalUtil;
 import com.tao.xiaoyuanyuan.utils.DateUitl;
+import com.tao.xiaoyuanyuan.utils.LiveDataBus;
 import com.tao.xiaoyuanyuan.utils.LogUtils;
 import com.tao.xiaoyuanyuan.utils.SPManager;
 import com.tao.xiaoyuanyuan.utils.ToastUtils;
@@ -175,7 +178,9 @@ public class UserFragment extends Fragment {
         mTextType = SPManager.getInt(SPManager.SP_MAIN_FLAG, "mTextType", mTextType);
         mTextColor = SPManager.getInt(SPManager.SP_MAIN_FLAG, "mTextColor", mTextColor);
         mTextSize = SPManager.getInt(SPManager.SP_MAIN_FLAG, "mTextSize", mTextSize);
+
         mImagePaht = SPManager.getString(SPManager.SP_MAIN_FLAG, "imagePath", null);
+
         isShowPicture = SPManager.getBoolean(SPManager.SP_MAIN_FLAG, "isShowPicture", false);
         GlideUtils.intoImage(mImagePaht, mImagePathIv, R.mipmap.logo, R.mipmap.logo);
 
@@ -206,7 +211,7 @@ public class UserFragment extends Fragment {
             App.getInstance().setOnlineTime(0);
         }
         initView();
-
+       
         return view;
     }
 
@@ -535,6 +540,7 @@ public class UserFragment extends Fragment {
                     for (LocalMedia media : selectList) {
                         Log.i("图片-----》", media.getCompressPath());
                     }
+                    mImagePaht = selectList.get(0).getPath();
                     GlideUtils.intoImage(selectList.get(0).getPath(), mImagePathIv, R.mipmap.logo, R.mipmap.logo);
                     RxBus.getDefault().post(new ImageServiceEvent(selectList.get(0).getPath()));
                     SPManager.saveString(SPManager.SP_MAIN_FLAG, "imagePath", selectList.get(0).getPath());

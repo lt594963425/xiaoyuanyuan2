@@ -30,6 +30,7 @@ import com.android.view.CircleImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.tao.xiaoyuanyuan.R;
 import com.tao.xiaoyuanyuan.base.App;
 import com.tao.xiaoyuanyuan.broad.BootCompleteReceive;
@@ -345,6 +346,7 @@ public class BackGroundService extends Service {
             RequestOptions requestOptions = new RequestOptions()
                     .centerCrop()
                     .placeholder(R.mipmap.logo)
+                    .override(Target.SIZE_ORIGINAL)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .error(R.mipmap.logo);
             Glide.with(App.getContext())
