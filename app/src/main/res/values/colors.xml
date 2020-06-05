@@ -28,6 +28,9 @@
     <color name="color_orange">#E0FF6100</color>
     <color name="color_gray_f8">#F8F8F8</color>
     <color name="background_tab_pressed">#6633B5E5</color>
+
+    <color name="color_f3f3f3">#f3f3f3</color>
+    <color name="color_323457">#323457</color>
     <!--白天主题-->
     <color name="day_backgroup_color">#FFFFFFFF</color>
     <color name="day_one_text_color">#FF000000</color>

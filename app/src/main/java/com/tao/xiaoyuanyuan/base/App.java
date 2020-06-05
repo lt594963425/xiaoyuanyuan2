@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Build;
 import android.support.multidex.MultiDex;
@@ -46,6 +47,10 @@ public class App extends TinkerApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Resources res = super.getResources();
+        Configuration config = new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config, res.getDisplayMetrics());
         INSTANCE = this;
         CrashHandler.getInstance().init(this);
         //初始化数据库

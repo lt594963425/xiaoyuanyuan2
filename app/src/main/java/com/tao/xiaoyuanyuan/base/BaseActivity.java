@@ -1,6 +1,7 @@
 package com.tao.xiaoyuanyuan.base;
 
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -10,6 +11,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 
 import com.tao.xiaoyuanyuan.R;
@@ -94,7 +98,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * 隐藏状态栏的高度
+     * 是否隐藏状态栏的高度
      */
     public void setStatusBarTrans(final boolean isDecor) {
         //StatusBarUtils.setStatusBarColor(this, ContextCompat.getColor(this, R.color.transparent));
@@ -106,14 +110,15 @@ public class BaseActivity extends AppCompatActivity {
      * 保留状态栏高度,状态栏设置为透明
      */
     public void setStatusBarShowHeight() {
-        StatusBarUtils.setStatusBarColor(this, ContextCompat.getColor(this, R.color.transparent));
+        StatusBarUtils.setStatusBarColor(this, Color.TRANSPARENT);
+
     }
 
     /**
-     * 保留状态栏高度,状态栏设置为透明
+     * 保留状态栏高度,状态栏设置颜色
      */
-    public void setStatusBarShowHeight(@ColorRes int id) {
-        StatusBarUtils.setStatusBarColor(this, ContextCompat.getColor(this, id));
+    public void setStatusBarShowHeight( int id) {
+        StatusBarUtils.setStatusBarColor(this, id);
     }
 
     /**
@@ -153,6 +158,20 @@ public class BaseActivity extends AppCompatActivity {
 
         if (compositeDisposable != null) compositeDisposable.dispose();
     }
-
+    public void setAdapterStatusBar(View view) {
+        if (view.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.topMargin = com.android.library.utils.StatusBarUtils.getStatusBarHeight();
+            view.setLayoutParams(layoutParams);
+        } else if (view.getLayoutParams() instanceof LinearLayout.LayoutParams) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.topMargin = com.android.library.utils.StatusBarUtils.getStatusBarHeight();
+            view.setLayoutParams(layoutParams);
+        } else if (view.getLayoutParams() instanceof FrameLayout.LayoutParams) {
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.topMargin = com.android.library.utils.StatusBarUtils.getStatusBarHeight();
+            view.setLayoutParams(layoutParams);
+        }
+    }
 
 }

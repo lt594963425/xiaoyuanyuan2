@@ -42,6 +42,8 @@ import com.tao.xiaoyuanyuan.base.BaseActivity;
 import com.tao.xiaoyuanyuan.broadcastreceiver.TimeChangeReceiver;
 import com.tao.xiaoyuanyuan.db.entity.NormalTextBean;
 import com.tao.xiaoyuanyuan.event.SelectUpdateTextEvent;
+import com.tao.xiaoyuanyuan.recoreddhistory.ui.HistoryRcordActivity;
+import com.tao.xiaoyuanyuan.recoreddhistory.ui.RcordHistoryFragment;
 import com.tao.xiaoyuanyuan.rxbus2.RxBus;
 import com.tao.xiaoyuanyuan.server.BackGroundService;
 import com.tao.xiaoyuanyuan.utils.AndroidUtil;
@@ -70,7 +72,7 @@ public class UserActivity extends BaseActivity implements ActivityListener {
     @BindView(R.id.text_type_1)
     RadioButton textType1;
     @BindView(R.id.text_type_2)
-    RadioButton textType2;
+    TextView textType2;
     @BindView(R.id.text_type_3)
     RadioButton textType3;
     @BindView(R.id.text_type_4)
@@ -160,9 +162,7 @@ public class UserActivity extends BaseActivity implements ActivityListener {
         textType2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawerLayout.closeDrawer(Gravity.START);
-                mXToolbar.setTitle(textType2.getText());
-
+                startActivity(new Intent(UserActivity.this, HistoryRcordActivity.class));
             }
         });
         textType3.setOnClickListener(new View.OnClickListener() {
@@ -228,9 +228,7 @@ public class UserActivity extends BaseActivity implements ActivityListener {
         mItemDragAndSwipeCallback.setSwipeMoveFlags(ItemTouchHelper.START | ItemTouchHelper.END);
         mAddNormalTextAdapter.enableSwipeItem();
         mAddNormalTextAdapter.setOnItemSwipeListener(onItemSwipeListener);
-        textRecycler.setLayoutManager(new
-
-                LinearLayoutManager(this));
+        textRecycler.setLayoutManager(new LinearLayoutManager(this));
         textRecycler.setAdapter(mAddNormalTextAdapter);
         statusTv.setVisibility(View.VISIBLE);
         mAddNormalTextAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {

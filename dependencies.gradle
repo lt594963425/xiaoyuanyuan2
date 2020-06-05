@@ -8,8 +8,8 @@ allprojects {
 
 ext {
 
-    versionCode = 8
-    versionName = "1.8"
+    versionCode = 9
+    versionName = "1.9"
     applicationId =  "com.tao.xiaoyuanyuan"
 
     isDebug = false //module
