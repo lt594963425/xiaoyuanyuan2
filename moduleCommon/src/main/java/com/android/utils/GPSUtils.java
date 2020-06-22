@@ -1,13 +1,16 @@
 package com.android.utils;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 
 import java.util.List;
 
@@ -60,13 +63,16 @@ public class GPSUtils {
             //如果是Network
             locationProvider = LocationManager.NETWORK_PROVIDER;
         } else {
-            Intent i = new Intent();
-            i.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            mContext.startActivity(i);
             return null;
         }
+//        else {
+//            Intent i = new Intent();
+//            i.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//            mContext.startActivity(i);
+//            return null;
+//        }
 
-        //获取Location
+
         Location location = locationManager.getLastKnownLocation(locationProvider);
         if (location != null) {
             //不为空,显示地理位置经纬度
@@ -76,7 +82,7 @@ public class GPSUtils {
 
         }
         //监视地理位置变化
-        locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
+        locationManager.requestLocationUpdates(locationProvider, 1000, 1, locationListener);
         return null;
     }
 

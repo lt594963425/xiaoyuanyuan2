@@ -339,7 +339,7 @@ public class UserActivity extends BaseActivity implements ActivityListener {
                                 @Override
                                 public void OnLocationChange(Location location) {
                                     LogUtil.e("位置", location.getLatitude() + "--" + location.getLongitude() + "---" + location.getAltitude());
-                                    LogUtil.e("位置", location.getLatitude() + "--" + location.getLongitude());
+                                    LogUtil.e("位置", location.getExtras() + "--" + location.getLongitude());
                                 }
                             });
                         } else if (permission.shouldShowRequestPermissionRationale) {

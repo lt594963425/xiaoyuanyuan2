@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by GraffitiViewActivity.
- * User: Administrator
- * Name: ArouteDemo
- * functiona:
- * Date: 2019/10/23 0023be
- * Time: 上午 9:50
- */
+* Created by GraffitiViewActivity.
+* User: Administrator
+* Name: ArouteDemo
+* functiona:
+* Date: 2019/10/23 0023be
+* Time: 上午 9:50
+*/
 public class HistoryRcordActivity extends BaseActivity {
 
 
@@ -33,7 +33,8 @@ public class HistoryRcordActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history_activity);
-        setStatusBarShowHeight(Color.BLACK);
+
+        setStatusBarShowHeight(Color.rgb(50,52,87));
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -42,6 +43,7 @@ public class HistoryRcordActivity extends BaseActivity {
         }
 
     }
-
-
 }
+
+
+

@@ -40,6 +40,9 @@ android {
 //                arguments = [AROUTER_MODULE_NAME: project.getName()]
 //            }
 //        }
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
     }
     buildTypes {
         release {
@@ -58,7 +61,7 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all { output ->  // each 或者 all
             //这里修改apk文件名
-            def fileName = "${defaultConfig.versionCode}_" + "${defaultConfig.versionName}" + "_${variant.buildType.name}" + ".apk"
+            def fileName = "小圆圆_${defaultConfig.versionCode}_" + "${defaultConfig.versionName}" + "_${variant.buildType.name}" + ".apk"
             def outFile = output.outputFile
             if (outFile != null && outFile.name.endsWith('.apk')) {
                 outputFileName = fileName  //  output.outputFile 改为 outputFileName
