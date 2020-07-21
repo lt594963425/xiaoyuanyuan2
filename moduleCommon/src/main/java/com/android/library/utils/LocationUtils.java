@@ -13,7 +13,7 @@ import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.RequiresPermission;
+import androidx.annotation.RequiresPermission;
 import android.util.Log;
 
 import com.android.view.IOSDialog;

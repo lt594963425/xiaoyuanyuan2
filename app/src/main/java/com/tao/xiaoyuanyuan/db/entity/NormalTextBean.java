@@ -15,8 +15,6 @@ public class NormalTextBean extends RealmObject {
     @PrimaryKey
     public String text ;
 
-
-
     public String getText() {
         return text;
     }

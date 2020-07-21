@@ -1,7 +1,6 @@
 package com.tao.xiaoyuanyuan.view;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -15,7 +14,7 @@ import android.view.MotionEvent;
  * Time: 下午 14:39
  */
 
-public class MarqueeTextView extends android.support.v7.widget.AppCompatTextView {
+public class MarqueeTextView extends androidx.appcompat.widget.AppCompatTextView {
     public MarqueeTextView(Context context) {
         super(context);
         init();

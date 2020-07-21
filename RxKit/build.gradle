@@ -21,17 +21,17 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     //design包
-    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
 
     //appcompat包
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
 
     //cardView包
-    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
     //recyclerview包
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-    implementation 'com.android.support:support-annotations:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.annotation:annotation:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     //流式布局
     implementation 'com.google.android:flexbox:0.3.2'
     //沉浸式

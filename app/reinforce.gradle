@@ -62,7 +62,7 @@ def buildChannelApks() {
     exec {
         commandLine "powershell", "java -jar", reinforce_plugin_path + "/lib/walle-cli-all.jar batch -f ", chanel_config_path, reinforce_apk_name, channel_apks_path
     }
-    println('编译多渠道包成功，生成的渠道包路径:' + channelsPath.getAbsolutePath())
+    println('编译多渠道包成功，生成渠道包路径:' + channelsPath.getAbsolutePath())
 }
 
 /**
@@ -97,7 +97,7 @@ def reinforceApk() {
     println('开始进行加固操作')
     File releaseApk = new File('build/outputs/apk/release/app-release.apk')
     if (!releaseApk.exists()) {
-        throw new FileNotFoundException('Release包不存在，无法进行加固操作')
+        throw new FileNotFoundException('Release不存在，无法进行加固操作')
     }
     String releasePath = 'build/outputs/apk/release/app-release.apk'
     //创建加固文件夹

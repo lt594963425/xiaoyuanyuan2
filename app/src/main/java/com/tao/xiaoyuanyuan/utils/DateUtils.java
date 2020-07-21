@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -159,6 +160,32 @@ public class DateUtils {
         return format.format(date);
     }
 
+    public static Calendar getCalendar(String dateString) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+        Date date = new Date();
+        try {
+            date = format.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //可根据需要自行截取数据显示
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal;
+    }
+
+    public static Date getData(String dateString) {
+        //可根据需要自行截取数据显示
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+        Date date = new Date();
+        try {
+            date = format.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
     public static String getAllTime(Date date) {
         //可根据需要自行截取数据显示
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -235,13 +262,60 @@ public class DateUtils {
 
     public static String getDate() {
         try {
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");//如果hh为小写 那么就搜12小时制 如果为大写 那么就是24小时制
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");//如果hh为小写 那么就搜12小时制 如果为大写 那么就是24小时制
             Date day = new Date();
             return df.format(day);
         } catch (Exception e) {
             return "0000-00-00 00:00";
         }
 
+    }
+
+    /**
+     * 15点上下随机波动
+     *
+     * @param day
+     * @return
+     */
+    public static String[] getB1Time(int day) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+        String[] times = new String[2];
+        String startTime;
+        String endTime;
+        Calendar calendar = Calendar.getInstance();
+        Random rand = new Random();
+        //小时
+        int shour = 0;
+        int defHuor = 15;
+        int randHNum = 1 + rand.nextInt(5);
+        int fuhao = 1 + rand.nextInt(1);
+        if (fuhao == 1) {
+            shour = defHuor - randHNum;
+        } else {
+            shour = defHuor + randHNum;
+        }
+        //分钟
+        int sminute = 1 + rand.nextInt(59);
+        //秒
+        int ssecond = 1 + rand.nextInt(59);
+        calendar.add(Calendar.DATE, -day); //向前走一天
+        calendar.set(Calendar.HOUR_OF_DAY, shour); //向前走一个
+        calendar.add(Calendar.MINUTE, sminute); //向前走一天
+        calendar.add(Calendar.SECOND, ssecond); //向前走一天
+        Date date = calendar.getTime();
+        startTime = df.format(date);
+        shour = calendar.get(Calendar.HOUR_OF_DAY) + 2;
+        calendar.set(Calendar.HOUR_OF_DAY, shour);
+        sminute = 1 + rand.nextInt(59);
+        calendar.add(Calendar.MINUTE, sminute); //向前走一天
+        ssecond = 1 + rand.nextInt(59);
+        calendar.add(Calendar.SECOND, ssecond); //向前走一天
+        Date date2 = calendar.getTime();
+
+        endTime = df.format(date2);
+        times[0] = startTime;
+        times[1] = endTime;
+        return times;
     }
 
     /**
@@ -472,11 +546,11 @@ public class DateUtils {
         long min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
         long ss = (diff / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60);
 //        long ms = (diff - day * 24 * 60 * 60 * 1000 - hour * 60 * 60 * 1000 - min * 60 * 1000 - s * 1000);
-        System.out.println(day + "天" + hour + "小时" + min + "分" + s + "秒");
+//        System.out.println(day + "天" + hour + "小时" + min + "分" + s + "秒");
         long hour1 = diff / (60 * 60 * 1000);
         String hourString = hour1 + "";
         long min1 = ((diff / (60 * 1000)) - hour1 * 60);
-        System.out.println(day + "天" + hour + "小时" + min + "分" + ss + "秒");
+//        System.out.println(day + "天" + hour + "小时" + min + "分" + ss + "秒");
         if (day > 0) {
             s = day + "天" + hour + "小时" + min + "分钟";
         } else if (hour > 0) {

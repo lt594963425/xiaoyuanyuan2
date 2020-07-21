@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/dp_10"
     android:background="@drawable/shape_base_dialog"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/dp_10">
 
     <TextView
         android:layout_width="match_parent"
@@ -27,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="标题:"
+            android:textSize="@dimen/sp_17"
             android:textColor="@color/black" />
 
         <EditText
@@ -41,9 +43,9 @@
             android:hint="请输入标题"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:text=""
-            android:textColor="#666666"
-            android:textSize="16sp" />
+            android:text="欢迎来到我的直播间"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_16" />
 
     </LinearLayout>
 

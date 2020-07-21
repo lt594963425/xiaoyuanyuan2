@@ -1,5 +1,6 @@
 package com.tao.xiaoyuanyuan.recoreddhistory.adapter;
 
+import android.graphics.Typeface;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ public class RecordHistoryAdapter extends BaseItemDraggableAdapter<DateRecodBean
         ImageView image3 = helper.getView(R.id.image3);
 
         title.setText(item.getTitle());
+        title.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
         String startTime = item.getStart_time().split("年")[1];
         String endTIme = item.getEnd_time().split("年")[1];
         time.setText(startTime + " - " + endTIme);

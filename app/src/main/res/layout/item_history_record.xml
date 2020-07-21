@@ -20,7 +20,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="啊哈"
+            android:text="欢迎来到我的直播间"
+
             android:textColor="@color/black"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
@@ -47,11 +48,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_5"
         android:text="11月16日 21:40-11月16日 23:49"
-        android:textColor="#9a9a9a" />
+        android:textColor="#9a9a9a"
+        android:textSize="@dimen/sp_15" />
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/dp_32"
+        android:layout_height="@dimen/dp_33"
         android:layout_marginStart="@dimen/dp_5"
         android:orientation="horizontal">
 
@@ -65,7 +67,7 @@
                 android:layout_height="@dimen/dp_40"
                 android:layout_alignParentStart="true"
                 android:layout_centerInParent="true"
-                android:paddingBottom="@dimen/dp_4"
+                android:paddingTop="@dimen/dp_2"
                 android:src="@drawable/person_g" />
 
             <TextView
@@ -77,7 +79,7 @@
                 android:gravity="center"
                 android:text="4.9w"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_12" />
+                android:textSize="@dimen/sp_14" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -87,11 +89,11 @@
 
             <ImageView
                 android:id="@+id/image2"
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
+                android:layout_width="@dimen/dp_22"
+                android:layout_height="@dimen/dp_22"
                 android:layout_alignParentStart="true"
                 android:layout_centerInParent="true"
-                android:paddingBottom="@dimen/dp_2"
+                android:paddingTop="@dimen/dp_2"
                 android:src="@drawable/bean_w" />
 
             <TextView
@@ -101,7 +103,7 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_12" />
+                android:textSize="@dimen/sp_14" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -115,7 +117,7 @@
                 android:layout_height="@dimen/dp_21"
                 android:layout_alignParentStart="true"
                 android:layout_centerInParent="true"
-                android:paddingBottom="@dimen/dp_2"
+                android:paddingTop="@dimen/dp_2"
                 android:src="@drawable/clock_g" />
 
             <TextView
@@ -126,7 +128,7 @@
                 android:gravity="center"
                 android:text="2小时1分钟"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_12" />
+                android:textSize="@dimen/sp_14" />
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

@@ -3,9 +3,9 @@ package com.tao.xiaoyuanyuan.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import android.view.LayoutInflater
 import android.view.View
@@ -27,8 +27,8 @@ import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean
  * Time: 上午 11:19
  */
 
-class KtOnLineHistoryFragment : Fragment() {
-    private var recyclerView: RecyclerView? = null
+class KtOnLineHistoryFragment : androidx.fragment.app.Fragment() {
+    private var recyclerView: androidx.recyclerview.widget.RecyclerView? = null
     private var progressStatusLlt: LinearLayout? = null
     private var statusTv: TextView? = null
     private var mOnlineHistoryVAdapter: OnlineHistoryVAdapter? = null
@@ -47,11 +47,11 @@ class KtOnLineHistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView = view.findViewById(R.id.recyclerView) as RecyclerView
+        recyclerView = view.findViewById(R.id.recyclerView) as androidx.recyclerview.widget.RecyclerView
         progressStatusLlt = view.findViewById(R.id.progress_status_llt) as LinearLayout
         statusTv = view.findViewById(R.id.status_tv) as TextView
         mOnlineHistoryVAdapter = OnlineHistoryVAdapter(null)
-        recyclerView!!.setLayoutManager(LinearLayoutManager(context))
+        recyclerView!!.setLayoutManager(androidx.recyclerview.widget.LinearLayoutManager(context))
         recyclerView!!.setAdapter(mOnlineHistoryVAdapter)
         statusTv!!.setOnClickListener {
         }

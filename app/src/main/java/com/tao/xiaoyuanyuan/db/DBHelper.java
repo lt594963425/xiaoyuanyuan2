@@ -1,11 +1,10 @@
 package com.tao.xiaoyuanyuan.db;
 
 
-
-
 import com.tao.xiaoyuanyuan.db.entity.GoldManagerBean;
 import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean;
 import com.tao.xiaoyuanyuan.db.entity.RealmLikeBean;
+import com.tao.xiaoyuanyuan.recoreddhistory.bean.DateRecodBean;
 
 import java.util.List;
 
@@ -23,6 +22,7 @@ public interface DBHelper {
 
     /**
      * 查询 阅读记录
+     *
      * @param id
      * @return
      */
@@ -30,18 +30,21 @@ public interface DBHelper {
 
     /**
      * 增加 收藏记录
+     *
      * @param bean
      */
     void insertLikeBean(RealmLikeBean bean);
 
     /**
      * 删除 收藏记录
+     *
      * @param id
      */
     void deleteLikeBean(String id);
 
     /**
      * 查询 收藏记录
+     *
      * @param id
      * @return
      */
@@ -51,6 +54,7 @@ public interface DBHelper {
 
     /**
      * 修改 收藏记录 时间戳以重新排序
+     *
      * @param id
      * @param time
      * @param isPlus
@@ -59,13 +63,18 @@ public interface DBHelper {
 
     /**
      * 更新 掘金首页管理列表
+     *
      * @param bean
      */
     void updateGoldManagerList(GoldManagerBean bean);
 
     /**
      * 获取 掘金首页管理列表
+     *
      * @return
      */
     GoldManagerBean getGoldManagerList();
+
+
+
 }

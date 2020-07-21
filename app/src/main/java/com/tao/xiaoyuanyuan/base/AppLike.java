@@ -31,7 +31,7 @@ import java.util.Locale;
 
 public class AppLike extends DefaultApplicationLike {
     public static final String APP_ID = "d8f4d9438a";
-    public String APP_CHANNEL = "官方"; // TODO 自定义渠道
+    public static String APP_CHANNEL = "官方"; // TODO 自定义渠道
     private static  String TAG = "AppLike";
 
     public AppLike(Application application, int tinkerFlags,
@@ -242,7 +242,7 @@ public class AppLike extends DefaultApplicationLike {
         // 设置开发设备，默认为false，上传补丁如果下发范围指定为“开发设备”，需要调用此接口来标识开发设备
         Bugly.setIsDevelopmentDevice(getApplication(), true);
         //  todo 多渠道需求塞入
-        APP_CHANNEL = WalleChannelReader.getChannel(getApplication());
+        APP_CHANNEL = WalleChannelReader.getChannel(getApplication(),"官方");
 //        Bugly.setAppChannel(getApplication(), channel);
         Bugly.setAppChannel(getApplication(), APP_CHANNEL);
         // 这里实现SDK初始化，appId替换成你的在Bugly平台申请的appId 1638ccad67
@@ -261,4 +261,6 @@ public class AppLike extends DefaultApplicationLike {
         super.onTerminate();
         Beta.unInit();
     }
+
+
 }

@@ -231,7 +231,7 @@
                 </RadioGroup>
             </LinearLayout>
 
-            <android.support.v7.widget.SwitchCompat
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_compat"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_40"
@@ -317,7 +317,7 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.SwitchCompat
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_show_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_40"

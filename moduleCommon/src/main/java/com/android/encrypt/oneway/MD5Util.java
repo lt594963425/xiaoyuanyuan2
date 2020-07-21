@@ -22,7 +22,7 @@
 
 package com.android.encrypt.oneway;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 
 import com.android.encrypt.base.CloseUtils;

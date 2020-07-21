@@ -16,7 +16,7 @@
 package com.android.library.floatlibrary.anchor;
 
 import android.graphics.Point;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Represents a visual object that can be positioned at (X,Y) coordinates.

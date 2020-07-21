@@ -1,7 +1,7 @@
 package com.android.utils;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.library.R;
 import com.luck.picture.lib.PictureSelector;

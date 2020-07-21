@@ -7,6 +7,7 @@ import com.tao.xiaoyuanyuan.db.entity.NormalTextBean;
 import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean;
 import com.tao.xiaoyuanyuan.db.entity.ReadStateBean;
 import com.tao.xiaoyuanyuan.db.entity.RealmLikeBean;
+import com.tao.xiaoyuanyuan.recoreddhistory.bean.DateRecodBean;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -247,4 +248,8 @@ public class RealmHelper implements DBHelper {
             return null;
         return mRealm.copyFromRealm(bean);
     }
+
+
+
+
 }

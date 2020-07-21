@@ -23,7 +23,7 @@
 package com.android.encrypt.symmetric;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 
 import com.android.encrypt.base.CryptoProvider;

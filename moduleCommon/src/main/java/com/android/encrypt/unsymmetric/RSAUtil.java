@@ -24,7 +24,7 @@ package com.android.encrypt.unsymmetric;
 
 
 import android.os.Build;
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 
 import com.android.encrypt.base.Base64;

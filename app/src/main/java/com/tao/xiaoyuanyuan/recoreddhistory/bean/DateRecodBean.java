@@ -1,11 +1,15 @@
 package com.tao.xiaoyuanyuan.recoreddhistory.bean;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by LiuTao on 2019/11/18 0018 上午 11:24
  * functiona:
  */
-public class DateRecodBean {
-
+public class DateRecodBean extends RealmObject {
+    @PrimaryKey()
+    private String id;
     String title="" ;
     String start_time="";
     String end_time="";
@@ -27,6 +31,14 @@ public class DateRecodBean {
 
     public String getStart_time() {
         return start_time;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setStart_time(String start_time) {

@@ -12,7 +12,7 @@ import android.util.AttributeSet;
  * Time: 下午 14:39
  */
 
-public class MarqueeTextView extends android.support.v7.widget.AppCompatTextView {
+public class MarqueeTextView extends androidx.appcompat.widget.AppCompatTextView {
     public MarqueeTextView(Context context) {
         super(context);
     }

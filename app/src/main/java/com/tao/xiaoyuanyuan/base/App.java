@@ -6,19 +6,23 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.location.Location;
 import android.os.Build;
-import android.support.multidex.MultiDex;
+import androidx.multidex.MultiDex;
 
 
-import com.android.utils.GPSUtils;
 import com.tao.xiaoyuanyuan.db.RealmHelper;
 import com.tao.xiaoyuanyuan.utils.LogUtils;
 import com.tencent.tinker.loader.app.TinkerApplication;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
 
+import java.util.concurrent.TimeUnit;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.WebSocket;
+import okio.ByteString;
 
 /**
  * $activityName
@@ -32,6 +36,7 @@ public class App extends TinkerApplication {
     private static App INSTANCE;
     public static RealmHelper realmHelper;
     public  long mOnlineTime;
+    private WebSocket mWebSocket;
 
     public App() {
         super(ShareConstants.TINKER_ENABLE_ALL, "com.tao.xiaoyuanyuan.base.AppLike",
@@ -68,6 +73,17 @@ public class App extends TinkerApplication {
 
     }
 
+    //初始化WebSocket
+    public void init() {
+       String mWbSocketUrl = "ws://echo.websocket.org";
+        OkHttpClient  mClient = new OkHttpClient.Builder()
+                .pingInterval(10, TimeUnit.SECONDS)
+                .build();
+        Request request = new Request.Builder()
+                .url(mWbSocketUrl)
+                .build();
+        mWebSocket = mClient.newWebSocket(request, new WsListener());
+    }
 
 
     public static App getInstance() {
@@ -122,5 +138,26 @@ public class App extends TinkerApplication {
 
     public void setOnlineTime(long onlineTime) {
         mOnlineTime = onlineTime;
+    }
+
+
+    //发送String消息
+    public void send(final String message) {
+        if (mWebSocket != null) {
+            mWebSocket.send(message);
+        }
+    }
+
+    //发送byte消息
+    public void send(final ByteString message) {
+        if (mWebSocket != null) {
+            mWebSocket.send(message);
+        }
+    }
+
+    //主动断开连接
+    public void disconnect(int code, String reason) {
+        if (mWebSocket != null)
+            mWebSocket.close(code, reason);
     }
 }

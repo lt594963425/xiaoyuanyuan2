@@ -10,16 +10,14 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
-import android.util.EventLog;
+import androidx.annotation.RequiresApi;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.webkit.WebChromeClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,9 +32,7 @@ import com.bumptech.glide.request.target.Target;
 import com.tao.xiaoyuanyuan.R;
 import com.tao.xiaoyuanyuan.base.App;
 import com.tao.xiaoyuanyuan.broad.BootCompleteReceive;
-import com.tao.xiaoyuanyuan.db.RealmHelper;
 import com.tao.xiaoyuanyuan.db.entity.OnLineTimeBean;
-import com.tao.xiaoyuanyuan.db.entity.RealmLikeBean;
 import com.tao.xiaoyuanyuan.event.BackGroundServiceEvent;
 import com.tao.xiaoyuanyuan.event.ImageServiceEvent;
 import com.tao.xiaoyuanyuan.event.ImageShowEvent;
@@ -50,12 +46,9 @@ import com.tao.xiaoyuanyuan.rxbus2.RxBus;
 import com.tao.xiaoyuanyuan.rxbus2.Subscribe;
 import com.tao.xiaoyuanyuan.rxbus2.ThreadMode;
 import com.tao.xiaoyuanyuan.utils.DateUitl;
-import com.tao.xiaoyuanyuan.utils.LogUtils;
 import com.tao.xiaoyuanyuan.utils.RxTimerUtil;
 import com.tao.xiaoyuanyuan.utils.ToastUtils;
 import com.tao.xiaoyuanyuan.utils.UIUtils;
-
-import java.util.Date;
 
 public class BackGroundService extends Service {
     public static boolean isStarted = false;

@@ -1,7 +1,6 @@
 package com.tao.xiaoyuanyuan.ui;
 
-import android.app.Dialog;
-import android.arch.lifecycle.Observer;
+import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,10 +9,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.SwitchCompat;
+
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,7 +57,6 @@ import com.tao.xiaoyuanyuan.rxbus2.ThreadMode;
 import com.tao.xiaoyuanyuan.server.BackGroundService;
 import com.tao.xiaoyuanyuan.utils.AnimalUtil;
 import com.tao.xiaoyuanyuan.utils.DateUitl;
-import com.tao.xiaoyuanyuan.utils.LiveDataBus;
 import com.tao.xiaoyuanyuan.utils.LogUtils;
 import com.tao.xiaoyuanyuan.utils.SPManager;
 import com.tao.xiaoyuanyuan.utils.ToastUtils;
@@ -70,9 +68,7 @@ import com.tao.xiaoyuanyuan.view.colorpicker.slider.AlphaSlider;
 import com.tao.xiaoyuanyuan.view.colorpicker.slider.LightnessSlider;
 
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;

@@ -1,13 +1,11 @@
 package com.tao.xiaoyuanyuan.utils;
 
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -15,12 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by LiveDataBus.
- * User: Administrator
- * Name: xiaoyuanyuan
- * functiona: 事件通信总线
- * Date: 2019/9/3 0003
- * Time: 下午 15:36
+ * @ClassName: LiveDataBus
+ * @Description: 具有生命周期感知的事件总线通信通过Tag标记。 代替Eventbus ,rxbus
+ * @Author: LiuTao
+ * @CreateDate: 2020/6/18 11:33
+ * @UpdateUser: LiuTao
  */
 public class LiveDataBus {
 
@@ -38,14 +35,14 @@ public class LiveDataBus {
         return SingletonHolder.DEFAULT_BUS;
     }
 
-    public synchronized <T> BusMutableLiveData<T> with(String key, Class<T> type) {
+    public <T> MutableLiveData<T> with(String key, Class<T> type) {
         if (!bus.containsKey(key)) {
             bus.put(key, new BusMutableLiveData<>());
         }
-        return (BusMutableLiveData<T>) bus.get(key);
+        return (MutableLiveData<T>) bus.get(key);
     }
 
-    public BusMutableLiveData<Object> with(String key) {
+    public MutableLiveData<Object> with(String key) {
         return with(key, Object.class);
     }
 
@@ -81,59 +78,30 @@ public class LiveDataBus {
         }
     }
 
-    public static class BusMutableLiveData<T> extends MutableLiveData<T> {
-
-
-
-        private class PostValueTask implements Runnable {
-            private Object newValue;
-
-            public PostValueTask(@NonNull Object newValue) {
-                this.newValue = newValue;
-            }
-
-            @Override
-            public void run() {
-                setValue((T) newValue);
-            }
-        }
+    private static class BusMutableLiveData<T> extends MutableLiveData<T> {
 
         private Map<Observer, Observer> observerMap = new HashMap<>();
-        private Handler mainHandler = new Handler(Looper.getMainLooper());
 
         @Override
-        public void postValue(T value) {
-            mainHandler.post(new PostValueTask(value));
-        }
-
-        @Override
-        public void observe(@NonNull LifecycleOwner owner, @NonNull Observer<T> observer) {
+        public void observe(@NonNull LifecycleOwner owner, @NonNull Observer<? super T> observer) {
             super.observe(owner, observer);
             try {
-                hook(observer);
+                hook((Observer<T>) observer);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        public void observeSticky(@NonNull LifecycleOwner owner, @NonNull Observer<T> observer) {
-            super.observe(owner, observer);
-        }
-
         @Override
-        public void observeForever(@NonNull Observer<T> observer) {
+        public void observeForever(@NonNull Observer<? super T> observer) {
             if (!observerMap.containsKey(observer)) {
                 observerMap.put(observer, new ObserverWrapper(observer));
             }
             super.observeForever(observerMap.get(observer));
         }
 
-        public void observeStickyForever(@NonNull Observer<T> observer) {
-            super.observeForever(observer);
-        }
-
         @Override
-        public void removeObserver(@NonNull Observer<T> observer) {
+        public void removeObserver(@NonNull Observer<? super T> observer) {
             Observer realObserver = null;
             if (observerMap.containsKey(observer)) {
                 realObserver = observerMap.remove(observer);

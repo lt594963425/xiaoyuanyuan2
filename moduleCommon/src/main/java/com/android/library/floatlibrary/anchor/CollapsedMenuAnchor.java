@@ -18,7 +18,7 @@ package com.android.library.floatlibrary.anchor;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;

@@ -113,6 +113,7 @@ public class DialogUtils {
                     }
                 })//默认全部显示
                         .setTitleText("开始时间")
+                        .setDate(DateUtils.getCalendar(dateRecodBean.getStart_time()))
                         .setContentTextSize(16)//滚轮文字大小
                         .setOutSideCancelable(true)//点击屏幕，点在控件外部范围时，是否取消显示
                         .setCancelText("取消")//取消按钮文字
@@ -147,6 +148,7 @@ public class DialogUtils {
                     }
                 })//默认全部显示
                         .setTitleText("结束时间")
+                        .setDate(DateUtils.getCalendar(dateRecodBean.getEnd_time()))
                         .setContentTextSize(16)//滚轮文字大小
                         .setOutSideCancelable(true)//点击屏幕，点在控件外部范围时，是否取消显示
                         .setCancelText("取消")//取消按钮文字

@@ -2,30 +2,24 @@ package com.tao.xiaoyuanyuan.recoreddhistory.ui;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
-import com.android.library.utils.StatusBarUtils;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
+
 import com.tao.xiaoyuanyuan.R;
 import com.tao.xiaoyuanyuan.base.BaseActivity;
-import com.tao.xiaoyuanyuan.recoreddhistory.adapter.RecordHistoryAdapter;
-import com.tao.xiaoyuanyuan.recoreddhistory.bean.DateRecodBean;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.tao.xiaoyuanyuan.utils.LiveDataBus;
+import com.tao.xiaoyuanyuan.utils.StatusBarUtils;
 
 /**
-* Created by GraffitiViewActivity.
-* User: Administrator
-* Name: ArouteDemo
-* functiona:
-* Date: 2019/10/23 0023be
-* Time: 上午 9:50
-*/
+ * Created by GraffitiViewActivity.
+ * User: Administrator
+ * Name: ArouteDemo
+ * functiona:
+ * Date: 2019/10/23 0023be
+ * Time: 上午 9:50
+ */
 public class HistoryRcordActivity extends BaseActivity {
 
 
@@ -34,7 +28,7 @@ public class HistoryRcordActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history_activity);
 
-        setStatusBarShowHeight(Color.rgb(50,52,87));
+        setStatusBarShowHeight(Color.rgb(50, 52, 87));
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -42,7 +36,40 @@ public class HistoryRcordActivity extends BaseActivity {
                     .commitNow();
         }
 
+
+        LiveDataBus.get().with("key1").observe(this, new Observer<Object>() {
+            @Override
+            public void onChanged(Object o) {
+                changeFragment1();
+            }
+        });
+
+        LiveDataBus.get().with("key2").observe(this, new Observer<Object>() {
+            @Override
+            public void onChanged(Object o) {
+
+                changeFragment2();
+            }
+        });
     }
+
+
+    public void changeFragment1() {
+        setStatusBarShowHeight(Color.rgb(50, 52, 87));
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, RcordHistoryFragment.newInstance())
+                .commitNow();
+    }
+
+    public void changeFragment2() {
+        setStatusBarShowHeight(Color.rgb(0, 0, 0));
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, RcordHistoryFragment2.newInstance())
+                .commitNow();
+    }
+
+
+
 }
 
 

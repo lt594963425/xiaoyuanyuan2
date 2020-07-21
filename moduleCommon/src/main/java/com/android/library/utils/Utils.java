@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
