@@ -4,13 +4,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
 import com.tao.xiaoyuanyuan.R;
 import com.tao.xiaoyuanyuan.base.BaseActivity;
 import com.tao.xiaoyuanyuan.utils.LiveDataBus;
-import com.tao.xiaoyuanyuan.utils.StatusBarUtils;
 
 /**
  * Created by GraffitiViewActivity.
@@ -22,17 +22,17 @@ import com.tao.xiaoyuanyuan.utils.StatusBarUtils;
  */
 public class HistoryRcordActivity extends BaseActivity {
 
-
+    public Fragment currentFragment;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history_activity);
 
         setStatusBarShowHeight(Color.rgb(50, 52, 87));
-
+        currentFragment = RcordHistoryFragment.newInstance();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, RcordHistoryFragment.newInstance())
+                    .replace(R.id.container, currentFragment)
                     .commitNow();
         }
 
@@ -56,19 +56,28 @@ public class HistoryRcordActivity extends BaseActivity {
 
     public void changeFragment1() {
         setStatusBarShowHeight(Color.rgb(50, 52, 87));
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, RcordHistoryFragment.newInstance())
-                .commitNow();
+        switchFragment(RcordHistoryFragment.newInstance());
     }
 
     public void changeFragment2() {
         setStatusBarShowHeight(Color.rgb(0, 0, 0));
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, RcordHistoryFragment2.newInstance())
-                .commitNow();
+        switchFragment(RcordHistoryFragment2.newInstance());
     }
 
-
+    private void switchFragment(Fragment targetFragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (!targetFragment.isAdded()) {
+            transaction.hide(currentFragment)
+                    .add(R.id.container, targetFragment)
+                    .commit();
+        } else {
+            transaction.hide(currentFragment)
+                    .show(targetFragment)
+                    .commit();
+            System.out.println("添加了( ⊙o⊙ )哇");
+        }
+        currentFragment = targetFragment;
+    }
 
 }
 

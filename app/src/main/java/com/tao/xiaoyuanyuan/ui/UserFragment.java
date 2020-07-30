@@ -566,4 +566,7 @@ public class UserFragment extends Fragment {
     public void dispose() {
         if (compositeDisposable != null) compositeDisposable.dispose();
     }
+
+
+
 }

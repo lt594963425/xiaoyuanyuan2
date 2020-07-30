@@ -7,16 +7,7 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.location.Location;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -25,6 +16,17 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.utils.GPSUtils;
 import com.android.utils.LogUtil;
@@ -46,6 +48,7 @@ import com.tao.xiaoyuanyuan.recoreddhistory.ui.HistoryRcordActivity;
 import com.tao.xiaoyuanyuan.rxbus2.RxBus;
 import com.tao.xiaoyuanyuan.server.BackGroundService;
 import com.tao.xiaoyuanyuan.utils.AndroidUtil;
+import com.tao.xiaoyuanyuan.utils.DateUtils;
 import com.tao.xiaoyuanyuan.utils.DialogUtils;
 import com.tao.xiaoyuanyuan.utils.LogUtils;
 import com.tao.xiaoyuanyuan.utils.UIUtils;
@@ -103,6 +106,7 @@ public class UserActivity extends BaseActivity implements ActivityListener {
     public NormalTextBean mNormalTextBean;
     public UserFragment mUserFragment;
     public KtOnLineHistoryFragment mKtOnLineHistoryFragment;
+    private String uuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,12 +118,12 @@ public class UserActivity extends BaseActivity implements ActivityListener {
         mXToolbar.setTitle(UIUtils.getResources().getString(R.string.app_name));
         mXToolbar.setNavigationIcon(null);
         requestPermissions();
-        version.setText("版本：" + AndroidUtil.getLocalVersionName()+"\n"+ AppLike.APP_CHANNEL);
+
         version.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Beta.checkUpgrade(true, false);
-                drawerLayout.closeDrawer(Gravity.START);
+                drawerLayout.closeDrawer(Gravity.LEFT);
             }
         });
         mTimeChangeReceiver = new TimeChangeReceiver();
@@ -137,7 +141,7 @@ public class UserActivity extends BaseActivity implements ActivityListener {
         textType0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawerLayout.closeDrawer(Gravity.START);
+                drawerLayout.closeDrawer(Gravity.LEFT);
                 mXToolbar.setTitle(UIUtils.getResources().getString(R.string.app_name));
                 if (mUserFragment == null) {
                     mUserFragment = new UserFragment();
@@ -149,7 +153,7 @@ public class UserActivity extends BaseActivity implements ActivityListener {
         textType1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawerLayout.closeDrawer(Gravity.START);
+                drawerLayout.closeDrawer(Gravity.LEFT);
                 mXToolbar.setTitle(textType1.getText());
                 if (mKtOnLineHistoryFragment == null) {
                     mKtOnLineHistoryFragment = new KtOnLineHistoryFragment();
@@ -168,14 +172,14 @@ public class UserActivity extends BaseActivity implements ActivityListener {
             @Override
             public void onClick(View v) {
                 mXToolbar.setTitle(textType3.getText());
-                drawerLayout.closeDrawer(Gravity.START);
+                drawerLayout.closeDrawer(Gravity.LEFT);
             }
         });
         textType4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mXToolbar.setTitle(textType4.getText());
-                drawerLayout.closeDrawer(Gravity.START);
+                drawerLayout.closeDrawer(Gravity.LEFT);
             }
         });
 
@@ -304,8 +308,29 @@ public class UserActivity extends BaseActivity implements ActivityListener {
 
             }
         });
+
+        uuid = AndroidUtil.getUUID();
+        version.setText("版本：" + AndroidUtil.getLocalVersionName() + "\n" + AppLike.APP_CHANNEL + "\n" + uuid);
+
+        getTime();
     }
 
+    /**
+     * 推荐使用第一种方式
+     */
+    public void getTime() {
+        long time1 = SystemClock.elapsedRealtime();
+        long time2 = SystemClock.currentThreadTimeMillis();
+//        long time2 = System.currentTimeMillis();
+
+//        1970-01-11 08-22-17
+//        1970-01-01 08-00-00
+//        1970-01-09 18-42-08
+        LogUtil.e("时间", DateUtils.getStarandDate(time1));
+        LogUtil.e("时间", DateUtils.getStarandDate(time2));
+        LogUtil.e("时间", DateUtils.getStarandDate(SystemClock.uptimeMillis()));
+
+    }
 
     @SuppressLint("CheckResult")
     private void requestPermissions() {
@@ -341,6 +366,9 @@ public class UserActivity extends BaseActivity implements ActivityListener {
                                     LogUtil.e("位置", location.getExtras() + "--" + location.getLongitude());
                                 }
                             });
+
+                            uuid = AndroidUtil.getUUID();
+                            version.setText("版本：" + AndroidUtil.getLocalVersionName() + "\n" + AppLike.APP_CHANNEL + "\n" + uuid);
                         } else if (permission.shouldShowRequestPermissionRationale) {
                             // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
                             LogUtils.d(TAG, permission.name + " is denied. More info should be provided.");
@@ -384,13 +412,11 @@ public class UserActivity extends BaseActivity implements ActivityListener {
     private void switchFragment(Fragment targetFragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (!targetFragment.isAdded()) {
-            transaction
-                    .hide(currentFragment)
+            transaction.hide(currentFragment)
                     .add(R.id.user_fragment, targetFragment)
                     .commit();
         } else {
-            transaction
-                    .hide(currentFragment)
+            transaction.hide(currentFragment)
                     .show(targetFragment)
                     .commit();
             System.out.println("添加了( ⊙o⊙ )哇");
@@ -422,12 +448,12 @@ public class UserActivity extends BaseActivity implements ActivityListener {
     @Override
     public void openRightDrawer() {
 
-        drawerLayout.openDrawer(Gravity.END);
+        drawerLayout.openDrawer(Gravity.RIGHT);
     }
 
     @Override
     public void openLeftDrawer() {
-        drawerLayout.openDrawer(Gravity.START);
+        drawerLayout.openDrawer(Gravity.LEFT);
     }
 
     @Override

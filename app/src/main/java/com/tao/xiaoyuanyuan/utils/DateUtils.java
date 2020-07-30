@@ -1,18 +1,14 @@
 package com.tao.xiaoyuanyuan.utils;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
-
-import org.json.JSONArray;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -23,14 +19,6 @@ import java.util.Date;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -275,7 +263,7 @@ public class DateUtils {
      * 15点上下随机波动
      *
      * @param day
-     * @return
+     * @return 起始和结束时间 相差2~3小时
      */
     public static String[] getB1Time(int day) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
@@ -287,8 +275,8 @@ public class DateUtils {
         //小时
         int shour = 0;
         int defHuor = 15;
-        int randHNum = 1 + rand.nextInt(5);
-        int fuhao = 1 + rand.nextInt(1);
+        int randHNum = rand.nextInt(5);//[0，4]
+        int fuhao = 1 + rand.nextInt(2);//[0，1]--->[1,2]
         if (fuhao == 1) {
             shour = defHuor - randHNum;
         } else {
@@ -307,11 +295,10 @@ public class DateUtils {
         shour = calendar.get(Calendar.HOUR_OF_DAY) + 2;
         calendar.set(Calendar.HOUR_OF_DAY, shour);
         sminute = 1 + rand.nextInt(59);
-        calendar.add(Calendar.MINUTE, sminute); //向前走一天
+        calendar.add(Calendar.MINUTE, sminute);
         ssecond = 1 + rand.nextInt(59);
-        calendar.add(Calendar.SECOND, ssecond); //向前走一天
+        calendar.add(Calendar.SECOND, ssecond);
         Date date2 = calendar.getTime();
-
         endTime = df.format(date2);
         times[0] = startTime;
         times[1] = endTime;

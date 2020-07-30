@@ -7,11 +7,9 @@ allprojects {
 }
 
 ext {
-
-    versionCode = 14
-    versionName = "1.14"
-    applicationId =  "com.tao.xiaoyuanyuan"
-
+    versionCode = 17
+    versionName = "1.17"
+    applicationId = "com.tao.xiaoyuanyuan"
     isDebug = false //module
     //Android
     androidBuildToolsVersion = "28.0.3"
@@ -19,7 +17,6 @@ ext {
     androidTargetSdkVersion = 28
     androidCompileSdkVersion = 28
     supportLibraryVersion = '28.0.0'
-
     multidexVersion = '1.0.3'
     constraintVersion = '1.1.2'
     gsyVideoVersion = '6.0.3'
@@ -46,14 +43,10 @@ ext {
     retrofitConverterGsonVersion = '2.6.0'
     retrofit2AdapterRxjavaVersion = '2.6.0'
     okhttp3LoggingInterceptorVersion = '3.8.0'
-
     webSocketVersion = '1.4.0'
     arouterApiVersion = '1.4.1'
     arouterCompilerVersion = '1.2.2'
-
-
     dagger2Version = "2.0.2"
-
     androidDependencies = [
             recyclerView: 'androidx.recyclerview:recyclerview:1.0.0',
             appcompat_v7: 'androidx.appcompat:appcompat:1.0.0',
@@ -71,11 +64,9 @@ ext {
             banner            : "com.youth.banner:banner:${bannerView}",
             androidPickerView : "com.contrarywind:Android-PickerView:${androidPickerViewVersion}",
             smartRefreshLayout: "com.scwang.smartrefresh:SmartRefreshLayout:${smartRefreshLayoutVersion}",
-
             navi3dmap         : "com.amap.api:navi-3dmap:latest.integration",
             searchmap         : "com.amap.api:search:latest.integration",
             locationmap       : "com.amap.api:location:latest.integration",
-
             arouterapi        : "com.alibaba:arouter-api:${arouterApiVersion}",
             aptaroutercompiler: "com.alibaba:arouter-compiler:${arouterCompilerVersion}",
     ]
